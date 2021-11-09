@@ -12,16 +12,16 @@ const styleObjects = ()=>{
         title:{
             fontSize: 'x-large',
             color:colors.textMain,
+            marginRight: theme.spacing(12),
         },
         customizeToolbar:{
-            minHeight: 50
+            minHeight: 60
         },
         grow:{
             flexGrow: 1,
         },
         darkmodeBtn:{
-          width: theme.spacing(1),
-          marginRight:theme.spacing(2),
+          marginRight: theme.spacing(2),
           fontSize: 'large',
         },
         // sidebar
@@ -30,11 +30,35 @@ const styleObjects = ()=>{
             width:'200px',
             background: colors.secondary,
             position: 'fixed'
+        },
+        // main component
+        mainComponent:{
+            paddingLeft:'200px',
         }
     }))
 
+    const useSidebarStyles = makeStyles(theme=>({
+        sidebarBox:{
+            paddingTop:theme.spacing(2),
+            '& a':{
+                color:colors.mainWhite
+            }
+        },
+        sideMenuContainer:{
+            display:'flex',
+            justifyContent:'center',
+            paddingTop: theme.spacing(3),
+        },
+        menuListItem:{
+            display:'flex',
+            justifyContent:'space-between',
+            width: '200px',
+        }
+    }));
+
     return{
         useLayoutStyles,
+        useSidebarStyles,
     }
 }
 

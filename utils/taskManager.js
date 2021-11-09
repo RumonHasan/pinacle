@@ -4,7 +4,8 @@ import Cookies from 'js-cookie';
 export const TaskContext = createContext();
 
 const initialStates = {
-    darkMode: Cookies.get('darkMode')=== 'ON'? true: false
+    darkMode: Cookies.get('darkMode')=== 'ON'? true: false,
+    searchValue: '',
 }
 
 const reducer = (state, action)=>{
@@ -18,6 +19,12 @@ const reducer = (state, action)=>{
             return{
                 ...state,
                 darkMode:true
+            }
+        // search value
+        case 'UPDATE_SEARCH_VALUE':
+            return{
+                ...state,
+                searchValue: action.payload
             }
     }
 }
