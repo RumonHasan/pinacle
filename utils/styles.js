@@ -64,9 +64,46 @@ const styleObjects = ()=>{
         }
     }));
 
+    const useAllTaskStyles = makeStyles(theme=>({
+        container:{
+            width:'100vh',
+        },
+        title:{
+            paddingTop:theme.spacing(2.5),
+            fontSize:'xx-large',
+            fontWeight:'bold',
+            color: colors.titleMain
+        },
+        taskBlock:{
+            background: colors.taskBlock,
+            marginBottom: theme.spacing(0.5),
+            borderRadius:theme.spacing(0.5),
+            width:'100%',
+            cursor:'pointer',
+            transition: '450ms',
+            '&:hover':{
+                transform:'scale(1.02)',
+            }
+        },
+        taskContainer:{
+            padding:theme.spacing(1),
+            display:'flex',
+            justifyContent:'space-between',
+            '& a':{
+                color:colors.mainWhite
+            }
+        },
+        taskTitle:{
+            fontWeight:'bold',
+            fontSize:'large',
+            marginLeft:theme.spacing(1),
+        }
+    }));
+
     return{
         useLayoutStyles,
         useSidebarStyles,
+        useAllTaskStyles,
     }
 }
 

@@ -42,7 +42,7 @@ const Sidebar = () => {
                     <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>
                             <IoMdCreate style={{fontSize:'large', position:'absolute', left:10}}/>
-                            <NextLink href='/' passHref>
+                            <NextLink href='/createTask' passHref>
                                 <Link>
                                     <Typography>Create</Typography>
                                 </Link>
@@ -54,7 +54,7 @@ const Sidebar = () => {
                     <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>
                             <FaHome className={classes.listIcon}/>
-                            <NextLink href='/allTasks' passHref>
+                            <NextLink href='/' passHref>
                                 <Link>
                                     <Typography>All Tasks</Typography>
                                 </Link>

@@ -1,4 +1,5 @@
-import { ServerStyleSheets } from '@material-ui/styles';
+// underling documents changes the way the next app behaves
+import { ServerStyleSheets } from '@material-ui/core/styles';
 import Document, {Head, Html, Main, NextScript} from 'next/document';
 import React from 'react';
 export default class MyDocument extends Document{
@@ -16,6 +17,7 @@ export default class MyDocument extends Document{
         )
     }
 }
+// this fucntion will run before the component
 MyDocument.getInitialProps = async(ctx)=>{
     const sheets = new ServerStyleSheets();
     const originalRenderPage = ctx.renderPage;
