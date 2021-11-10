@@ -8,7 +8,8 @@ ListItem,
 Link,
 Typography,
 IconButton,
-Card} from '@material-ui/core';
+Card,
+Badge} from '@material-ui/core';
 import { TaskContext } from '../utils/taskManager';
 import styleObjects from '../utils/styles';
 import dynamic from 'next/dynamic';
@@ -39,39 +40,51 @@ const Sidebar = () => {
             <Container className={classes.sideMenuContainer}>
                 <List>
                     <ListItem className={classes.menuListItem}>
-                        <NextLink href='/' passHref>
-                            <Link>
-                                <Typography>Create</Typography>
-                            </Link>
-                        </NextLink>
-                        <IoMdCreate style={{fontSize:'large'}}/>
+                        <Container className={classes.listTextContainer}>
+                            <IoMdCreate style={{fontSize:'large', position:'absolute', left:10}}/>
+                            <NextLink href='/' passHref>
+                                <Link>
+                                    <Typography>Create</Typography>
+                                </Link>
+                            </NextLink>
+                        </Container>
+                        
                     </ListItem>
 
                     <ListItem className={classes.menuListItem}>
-                        <NextLink href='/allTasks' passHref>
-                            <Link>
-                                <Typography>All Tasks</Typography>
-                            </Link>
-                        </NextLink>
-                        <FaHome style={{fontSize:'large'}}/>
+                        <Container className={classes.listTextContainer}>
+                            <FaHome className={classes.listIcon}/>
+                            <NextLink href='/allTasks' passHref>
+                                <Link>
+                                    <Typography>All Tasks</Typography>
+                                </Link>
+                            </NextLink>
+                        </Container>
+                        <Badge badgeContent={2}></Badge>
                     </ListItem>
 
                     <ListItem className={classes.menuListItem}>
-                        <NextLink href='/notes' passHref>
-                            <Link>
-                                <Typography>Notes</Typography>
-                            </Link>
-                        </NextLink>
-                        <GrNotes style={{fontSize:'large'}}/>
+                        <Container className={classes.listTextContainer}>
+                            <GrNotes className={classes.listIcon}/>
+                            <NextLink href='/notes' passHref>
+                                <Link >
+                                    <Typography>Notes</Typography>
+                                </Link>
+                            </NextLink>
+                        </Container>
+                        <Badge badgeContent={2}></Badge>
                     </ListItem>
 
                     <ListItem className={classes.menuListItem}>
-                        <NextLink href='/notes' passHref>
-                            <Link>
-                                <Typography>Important</Typography>
-                            </Link>
-                        </NextLink>
-                        <MdNotificationImportant style={{fontSize:'large'}}/>
+                        <Container className={classes.listTextContainer}>
+                            <MdNotificationImportant className={classes.listIcon}/>
+                            <NextLink href='/notes' passHref>
+                                <Link>
+                                    <Typography>Important</Typography>
+                                </Link>
+                            </NextLink>
+                        </Container>
+                        <Badge badgeContent={2}></Badge>
                     </ListItem>
                 </List>
             </Container>

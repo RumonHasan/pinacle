@@ -50,9 +50,17 @@ const styleObjects = ()=>{
             paddingTop: theme.spacing(3),
         },
         menuListItem:{
-            display:'flex',
-            justifyContent:'space-between',
             width: '200px',
+            position: 'relative'
+        },
+        listTextContainer:{
+            display:'flex',
+            width:'100%',
+        },
+        listIcon:{
+            fontSize:'large', 
+            position:'absolute', 
+            left:10
         }
     }));
 
