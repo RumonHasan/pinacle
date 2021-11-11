@@ -24,16 +24,37 @@ const styleObjects = ()=>{
           marginRight: theme.spacing(2),
           fontSize: 'large',
         },
+        mainContentBlock:{
+            position: 'relative',
+        },
         // sidebar
         sidebarContainer:{
             height:'100vh',
             width:'200px',
             background: colors.secondary,
-            position: 'fixed'
+            position: 'absolute',
         },
         // main component
         mainComponent:{
             paddingLeft:'200px',
+            width:'100%',
+        },
+        // settings button
+        settingsBtn:{
+            marginLeft:theme.spacing(1),
+        },
+        // drawer designs
+        drawer:{
+            '& .MuiPaper-root':{
+                background: colors.secondary,
+            }
+        },
+        drawerList:{
+            paddingTop:theme.spacing(2),
+        },
+        drawerItems:{
+            width:'200px',
+            display:'flex',
         }
     }))
 
@@ -42,16 +63,23 @@ const styleObjects = ()=>{
             paddingTop:theme.spacing(2),
             '& a':{
                 color:colors.mainWhite
-            }
+            },
+            position: 'relative',
         },
         sideMenuContainer:{
             display:'flex',
             justifyContent:'center',
             paddingTop: theme.spacing(3),
+            borderBottom: `1px solid ${colors.titleMain}`
         },
         menuListItem:{
             width: '200px',
-            position: 'relative'
+            position: 'relative',
+            transition: '450ms',
+            '&:hover':{
+                transform: 'scale(1.01)',
+                background:colors.titleMain
+            }
         },
         listTextContainer:{
             display:'flex',
@@ -61,13 +89,25 @@ const styleObjects = ()=>{
             fontSize:'large', 
             position:'absolute', 
             left:10
+        },
+        // add new task
+        newTaskContainerBtn:{
+            position:'fixed',
+            bottom:20,
+            right: 10
+        },
+        // dialog
+        dialogBoxWrapper:{
+            padding:theme.spacing(2), 
+            width:'600px'      
+        },
+        dialogHeaderContainer:{
+            display:'flex',
+            justifyContent:'space-between',
         }
     }));
 
     const useAllTaskStyles = makeStyles(theme=>({
-        container:{
-            width:'100vh',
-        },
         title:{
             paddingTop:theme.spacing(2.5),
             fontSize:'xx-large',

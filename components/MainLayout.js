@@ -1,4 +1,4 @@
-import React,{useContext} from 'react';
+import React,{useContext, useState} from 'react';
 import {
 AppBar,
 Toolbar,
@@ -13,7 +13,11 @@ Button,
 Avatar,
 Box,
 TextField,
-IconButton
+IconButton,
+Drawer,
+List,
+ListItem,
+ListSubheader
 } from '@material-ui/core';
 import {CgDarkMode} from 'react-icons/cg';
 import {FaSearch} from 'react-icons/fa';
@@ -24,6 +28,9 @@ import NextLink from 'next/link';
 import styleObjects from '../utils/styles';
 import Cookies from 'js-cookie';
 import Sidebar from './Sidebar';
+import {AiFillSetting} from 'react-icons/ai';
+import {MdInvertColors} from 'react-icons/md';
+import {BiLogOut} from 'react-icons/bi';
 
 const MainLayout = ({children, title}) => {
     const {state, dispatch} = useContext(TaskContext);
@@ -36,6 +43,15 @@ const MainLayout = ({children, title}) => {
         dispatch({type:darkMode ? 'DARKMODE_OFF': 'DARKMODE_ON'})
         const newDarkMode = !darkMode;
         Cookies.set('darkMode', newDarkMode ? 'ON': 'OFF')
+    }
+
+    // drawer anchor
+    const [anchorDrawer, setAnchorDrawer] = useState(false);
+    const closeDrawer = ()=>{
+        setAnchorDrawer(false)
+    };
+    const openDrawer = ()=>{
+        setAnchorDrawer(true);
     }
 
     // custom theme
@@ -75,11 +91,41 @@ const MainLayout = ({children, title}) => {
                         </Button>
 
                         <Avatar style={{cursor:'pointer'}}>R</Avatar>
+                        
+                        <IconButton onClick={openDrawer} className={classes.settingsBtn}>
+                            <AiFillSetting/>
+                        </IconButton>
+
+                        <Drawer
+                        anchor={'right'}
+                        open={anchorDrawer}
+                        onClose={closeDrawer}
+                        className={classes.drawer}>
+                            <List>
+                                <ListSubheader style={{borderBottom: `1px solid ${colors.titleMain}`}}>
+                                    <Typography style={{paddingBottom:'10px'}}>Settings</Typography>
+                                </ListSubheader>
+                                <List className={classes.drawerList}>
+                                    <ListItem className={classes.drawerItems}>
+                                        <MdInvertColors/>
+                                        <Button>
+                                            <Typography>Appearance</Typography>
+                                        </Button>
+                                    </ListItem>
+                                    <ListItem className={classes.drawerItems}>
+                                        <BiLogOut/>
+                                        <Button>
+                                             Logout
+                                        </Button>
+                                    </ListItem>
+                                </List>
+                            </List>
+                        </Drawer>
 
                     </Toolbar>
                 </AppBar>
 
-                <Box display='flex' justifyContent='flex-start'>
+                <Box display='flex' className={classes.mainContentBlock}>
                     <Container className={classes.sidebarContainer}>
                         <Sidebar/>
                     </Container>

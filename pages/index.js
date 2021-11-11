@@ -19,20 +19,15 @@ const AllTasks = (props) => {
     const {useAllTaskStyles} = styleObjects();
     const classes = useAllTaskStyles();
     const router = useRouter();
-    // task details
-    const taskDetailsHandler = ()=>{
-
-    }
     
     return (
         <MainLayout>
             <Container className={classes.container}>
                     <Typography className={classes.title}>All Tasks</Typography>
                     <Grid container alignItems='center'>
-                    {tasks.map((task)=>{
+                    {tasks.map((task, index)=>{
                         return (
-                            <Grid item xs={12} key={task.id} className={classes.taskBlock}
-                            onClick={taskDetailsHandler}>
+                            <Grid item xs={12} key={index} className={classes.taskBlock}>
                                     <Container className={classes.taskContainer}>
                                         <FormControl component='fieldset'>
                                             <RadioGroup
@@ -57,6 +52,7 @@ const AllTasks = (props) => {
                         )
                     })}
                     </Grid>
+                    <Typography className={classes.title}>Completed</Typography>
             </Container>
         </MainLayout>
     )
