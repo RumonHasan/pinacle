@@ -96,15 +96,6 @@ const styleObjects = ()=>{
             bottom:20,
             right: 10
         },
-        // dialog
-        dialogBoxWrapper:{
-            padding:theme.spacing(2), 
-            width:'600px'      
-        },
-        dialogHeaderContainer:{
-            display:'flex',
-            justifyContent:'space-between',
-        }
     }));
 
     const useAllTaskStyles = makeStyles(theme=>({
@@ -140,10 +131,18 @@ const styleObjects = ()=>{
         }
     }));
 
+    const useAddTaskStyles = makeStyles(theme=>({
+        formContainer:{
+            marginTop:theme.spacing(5),
+            maxWidth:'700px',
+        }
+    }))
+
     return{
         useLayoutStyles,
         useSidebarStyles,
         useAllTaskStyles,
+        useAddTaskStyles,
     }
 }
 

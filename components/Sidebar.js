@@ -44,25 +44,7 @@ const Sidebar = () => {
         dispatch({type:'UPDATE_SEARCH_VALUE', payload: e.target.value});
         router.push('/');
     }
-    // task dialog
-    const [taskDialog, setTaskDialog] = useState(false);
-    const openTaskHandler = ()=>{
-        setTaskDialog(true);
-    }
-    const closeTaskHandler = ()=>{
-        setTaskDialog(false);
-    }
-    // add task
-    const handleTaskChange = (e)=>{
-        const {value, name} = e.target;
-        setTaskForm({
-            ...taskForm,
-            [name]: value
-        })
-    }
-    const handleAddTask = async (e)=>{
-        e.preventDefault();
-    }
+
 
     return (
         <Box display='flex' className={classes.sidebarBox} justifyContent='center' flexDirection='column'>
@@ -84,7 +66,6 @@ const Sidebar = () => {
                                 </Link>
                             </NextLink>
                         </Container>
-                        
                     </ListItem>
 
                     <ListItem className={classes.menuListItem}>
@@ -137,50 +118,12 @@ const Sidebar = () => {
             </Container>
 
             <Container className={classes.newTaskContainerBtn}>
-                <Button onClick={openTaskHandler} variant='outlined' style={{whiteSpace:'nowrap'}}>
-                    <FaPlus/> Add A New Task
-                </Button>
-            </Container>
-
-            <Dialog
-            open={taskDialog}
-            maxWidth='md'
-            classes={{paper:classes.dialogBoxWrapper}}>
-                <DialogTitle className={classes.dialogTitle}>
-                    <Container className={classes.dialogHeaderContainer}>
-                        <Typography style={{fontSize:'x-large', fontWeight:'bold'}}>Add A Task</Typography>
-                        <IconButton onClick={closeTaskHandler}>
-                            <FaTimes style={{fontSize:'x-large', fontWeight:'bold'}}/>
-                        </IconButton>
-                    </Container>
-                </DialogTitle>
-                <DialogContent dividers>
-                    <form onSubmit={handleAddTask}>
-                        <TextField
-                            name='title'
-                            label='Task Title'
-                            value={taskForm.title}
-                            onChange={handleTaskChange}
-                            variant='outlined'
-                            fullWidth
-                            style={{marginBottom: '7px'}}
-                        />
-                        <TextField
-                            multiline
-                            name='details'
-                            label='Task Details'
-                            value={taskForm.details}
-                            variant='outlined'
-                            minRows={3}
-                            onChange={handleTaskChange}
-                            maxRows={4}
-                            style={{marginBottom: '7px'}}
-                            fullWidth
-                        />
-                        <Button type='submit' variant='contained'>Add Task</Button>
-                    </form>
-                </DialogContent>
-            </Dialog>   
+                <NextLink href='/addTask' passHref>
+                    <Button variant='outlined' style={{whiteSpace:'nowrap'}}>
+                        <FaPlus/> Add A New Task
+                    </Button>
+                </NextLink>
+            </Container>  
         </Box>
     )
 }
