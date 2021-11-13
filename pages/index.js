@@ -4,7 +4,7 @@ Grid,
 FormControl, 
 FormControlLabel, 
 FormLabel, 
-RadioGroup,Radio, Link, IconButton } from '@material-ui/core';
+RadioGroup,Radio, Link, IconButton, Icon } from '@material-ui/core';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react'
 import MainLayout from '../components/MainLayout';
@@ -13,6 +13,7 @@ import database from '../utils/database';
 import styleObjects from '../utils/styles';
 import NextLink from 'next/link';
 import {BiDetail} from 'react-icons/bi';
+import { FaTrash } from 'react-icons/fa';
 
 const AllTasks = (props) => {
     const {tasks} = props;
@@ -24,7 +25,7 @@ const AllTasks = (props) => {
         <MainLayout>
             <Container className={classes.container}>
                     <Typography className={classes.title}>All Tasks</Typography>
-                    <Grid container alignItems='center'>
+                    <Grid container alignItems='center' className={classes.tasksGrid}>
                     {tasks.map((task, index)=>{
                         return (
                             <Grid item xs={12} key={index} className={classes.taskBlock}>
@@ -40,13 +41,18 @@ const AllTasks = (props) => {
                                                 label={task.title}/>
                                             </RadioGroup>
                                         </FormControl>
-                                        <NextLink href={`/task/${task.title}`} passHref>
-                                            <Link>
-                                                <IconButton>
-                                                    <BiDetail/>
-                                                </IconButton>
-                                            </Link>
-                                        </NextLink>
+                                        <Container className={classes.taskBtn}>
+                                            <NextLink href={`/task/${task.title}`} passHref>
+                                                <Link>
+                                                    <IconButton>
+                                                        <BiDetail/>
+                                                    </IconButton>
+                                                </Link>
+                                            </NextLink>
+                                            <IconButton>
+                                                <FaTrash/>
+                                            </IconButton>
+                                        </Container>
                                     </Container>
                             </Grid>
                         )

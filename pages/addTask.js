@@ -7,10 +7,12 @@ import styleObjects from '../utils/styles';
 import { useSnackbar } from 'notistack';
 import database from '../utils/database';
 import axios from 'axios';
+import { useRouter } from 'next/dist/client/router';
 
  const AddTask = () => {
     const {useAddTaskStyles} = styleObjects();
     const classes = useAddTaskStyles();
+    const router = useRouter();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     // add task
     const [taskForm, setTaskForm] = useState({
@@ -25,15 +27,26 @@ import axios from 'axios';
             [name]: value
         })
     }
+    // adding task handler
     const handleAddTask = async (e)=>{
        e.preventDefault();
        try{
-       const {data} = await axios.post('/api/addTask', {...taskForm});
+        const {data} = await axios.post('/api/addTask/add', {title: taskForm.title, 
+        details: taskForm.details, completed: taskForm.completed}); // passing the data to the add handler
+        enqueueSnackbar(
+            'Task Has Been Added',
+            {variant:'success'},
+        )
+       router.push('/');
        }catch(err){
             enqueueSnackbar(
                 err.message,{variant:'error'}
             )
        }
+       setTaskForm({
+           title:'',
+           details:'',
+       })
     }
     return (
         <MainLayout title='Add Task'>

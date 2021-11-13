@@ -4,7 +4,7 @@ import Task from '../../../models/TaskModel';
 
 const handler = nextConnect();
 
-handler.get(async(req,res)=>{
+handler.post(async(req,res)=>{
     await database.connect();
     const newTask = new Task({
         title: req.body.title,
@@ -13,7 +13,13 @@ handler.get(async(req,res)=>{
     })
     const tasks = await newTask.save();
     await database.disconnect();
-    res.send(tasks);
+    // sending back the new task item
+    res.send({
+        _id: tasks._id,
+        title: tasks.title,
+        details: tasks.details,
+        completed: tasks.completed
+    })
 })
 
 export default handler;

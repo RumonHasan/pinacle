@@ -105,18 +105,23 @@ const styleObjects = ()=>{
             fontWeight:'bold',
             color: colors.titleMain
         },
+        tasksGrid:{
+            overflowY:'auto',
+            maxHeight:'280px',
+        },
         taskBlock:{
             background: colors.taskBlock,
             marginBottom: theme.spacing(0.5),
             borderRadius:theme.spacing(0.5),
-            width:'100%',
             cursor:'pointer',
             transition: '450ms',
+
             '&:hover':{
                 transform:'scale(1.02)',
             }
         },
         taskContainer:{
+            width:'100%',
             padding:theme.spacing(1),
             display:'flex',
             justifyContent:'space-between',
@@ -128,6 +133,10 @@ const styleObjects = ()=>{
             fontWeight:'bold',
             fontSize:'large',
             marginLeft:theme.spacing(1),
+        },
+        taskBtn:{
+            display:'flex'
+
         }
     }));
 
