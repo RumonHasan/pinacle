@@ -4,9 +4,9 @@ Grid,
 FormControl, 
 FormControlLabel, 
 FormLabel, 
-RadioGroup,Radio, Link, IconButton, Icon } from '@material-ui/core';
+RadioGroup,Radio, Link, IconButton, Icon, Box, Dialog, DialogTitle, Divider, DialogActions, Button, DialogContent } from '@material-ui/core';
 import { useRouter } from 'next/dist/client/router';
-import React from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 import MainLayout from '../components/MainLayout';
 import Task from '../models/TaskModel';
 import database from '../utils/database';
@@ -14,19 +14,79 @@ import styleObjects from '../utils/styles';
 import NextLink from 'next/link';
 import {BiDetail} from 'react-icons/bi';
 import { FaTrash } from 'react-icons/fa';
+import { TaskContext } from '../utils/taskManager';
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 const AllTasks = (props) => {
+    const {state, dispatch} = useContext(TaskContext)
     const {tasks} = props;
+    const [taskItems, setTaskItems] = useState(tasks);
+    const {searchValue, delete:{deleteBox, deleteId, deleteTitle}} = state;
     const {useAllTaskStyles} = styleObjects();
     const classes = useAllTaskStyles();
     const router = useRouter();
+    const {enqueueSnackbar} = useSnackbar();
+
+    // passing task length
+    useEffect(()=>{
+        dispatch({type:'TOTAL_TASKS', payload: tasks.length})
+    },[dispatch, tasks]);
+
+    // search function
+    useEffect(()=>{
+        if(searchValue){
+            const filteredTasks = taskItems.filter(task=>
+                task.title.toLowerCase().includes(searchValue));
+            setTaskItems(filteredTasks);
+        }else{  
+            setTaskItems(tasks);
+        }
+    },[searchValue]);
+
+    // delete
+    const deleteTaskHandler = (id, title)=>{
+        dispatch({type:'OPEN_DELETE_BOX', payload:{id, title}})
+    }
+    const handleDeleteClose = ()=>{
+      dispatch({type:'CLOSE_DELETE_BOX'})
+    }
+    const deleteTask = async ()=>{ 
+        try{
+            const {data} = await axios.post('api/modifyTask/delete', {id: deleteId})
+            handleDeleteClose();
+            enqueueSnackbar('Task has been deleted',
+                {variant:'success'}
+            )
+        }catch(err){
+            enqueueSnackbar(
+                'Unable to delete task',
+                {variant:'error'}
+            )
+        }
+    }
     
     return (
         <MainLayout>
+            <Dialog
+            open={deleteBox}
+            onClose={handleDeleteClose}
+            >
+                <DialogTitle>
+                    {deleteTitle} will be permanently deleted!
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography>You will not be able to undo this action!</Typography>
+                </DialogContent>
+                <DialogActions style={{display:'flex', justifyContent:'center'}}>
+                    <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+                    <Button variant='contained' onClick={deleteTask}>Delete</Button>
+                </DialogActions>
+            </Dialog>
             <Container className={classes.container}>
                     <Typography className={classes.title}>All Tasks</Typography>
                     <Grid container alignItems='center' className={classes.tasksGrid}>
-                    {tasks.map((task, index)=>{
+                    {taskItems.map((task, index)=>{
                         return (
                             <Grid item xs={12} key={index} className={classes.taskBlock}>
                                     <Container className={classes.taskContainer}>
@@ -41,7 +101,7 @@ const AllTasks = (props) => {
                                                 label={task.title}/>
                                             </RadioGroup>
                                         </FormControl>
-                                        <Container className={classes.taskBtn}>
+                                        <Box className={classes.taskBtn}>
                                             <NextLink href={`/task/${task.title}`} passHref>
                                                 <Link>
                                                     <IconButton>
@@ -49,10 +109,10 @@ const AllTasks = (props) => {
                                                     </IconButton>
                                                 </Link>
                                             </NextLink>
-                                            <IconButton>
+                                            <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
                                                 <FaTrash/>
                                             </IconButton>
-                                        </Container>
+                                        </Box>
                                     </Container>
                             </Grid>
                         )

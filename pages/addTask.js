@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import MainLayout from '../components/MainLayout';
 import { TextField,
 Button, 
@@ -8,8 +8,10 @@ import { useSnackbar } from 'notistack';
 import database from '../utils/database';
 import axios from 'axios';
 import { useRouter } from 'next/dist/client/router';
+import {TaskContext} from '../utils/taskManager';
 
  const AddTask = () => {
+    const {dispatch} = useContext(TaskContext);
     const {useAddTaskStyles} = styleObjects();
     const classes = useAddTaskStyles();
     const router = useRouter();
@@ -31,7 +33,7 @@ import { useRouter } from 'next/dist/client/router';
     const handleAddTask = async (e)=>{
        e.preventDefault();
        try{
-        const {data} = await axios.post('/api/addTask/add', {title: taskForm.title, 
+        const {data} = await axios.post('/api/modifyTask/add', {title: taskForm.title, 
         details: taskForm.details, completed: taskForm.completed}); // passing the data to the add handler
         enqueueSnackbar(
             'Task Has Been Added',

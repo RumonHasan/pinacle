@@ -25,20 +25,13 @@ import {IoMdCreate} from 'react-icons/io';
 import { FaCalendar, FaPlus, FaTimes } from 'react-icons/fa';
 import { useRouter, Controller } from 'next/dist/client/router';
 import { useSnackbar } from 'notistack';
-import database from '../utils/database';
 
 const Sidebar = () => {
     const {state, dispatch} = useContext(TaskContext);
-    const {searchValue} = state;
+    const {searchValue, taskLength} = state;
     const {useSidebarStyles} = styleObjects();
     const classes = useSidebarStyles();
     const router = useRouter();
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-    const [taskForm, setTaskForm] = useState({
-        title:'',
-        details: '',
-        completed:false
-    })
     // search
     const handleSearch = (e)=>{
         dispatch({type:'UPDATE_SEARCH_VALUE', payload: e.target.value});
@@ -77,7 +70,7 @@ const Sidebar = () => {
                                 </Link>
                             </NextLink>
                         </Container>
-                        <Badge badgeContent={2}></Badge>
+                        <Badge badgeContent={taskLength}></Badge>
                     </ListItem>
 
                     <ListItem className={classes.menuListItem}>

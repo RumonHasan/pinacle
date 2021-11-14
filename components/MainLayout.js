@@ -34,7 +34,7 @@ import {BiLogOut} from 'react-icons/bi';
 
 const MainLayout = ({children, title}) => {
     const {state, dispatch} = useContext(TaskContext);
-    const {darkMode, searchValue} = state;
+    const {darkMode} = state;
     const {useLayoutStyles} = styleObjects();
     const classes = useLayoutStyles();
 
@@ -140,3 +140,4 @@ const MainLayout = ({children, title}) => {
 }
 
 export default MainLayout;
+
