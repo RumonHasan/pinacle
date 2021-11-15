@@ -115,10 +115,6 @@ const styleObjects = ()=>{
             borderRadius:theme.spacing(0.5),
             cursor:'pointer',
             transition: '450ms',
-
-            '&:hover':{
-                transform:'scale(1.02)',
-            }
         },
         taskContainer:{
             width:'100%',

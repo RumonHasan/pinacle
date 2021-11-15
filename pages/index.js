@@ -22,27 +22,28 @@ const AllTasks = (props) => {
     const {state, dispatch} = useContext(TaskContext)
     const {tasks} = props;
     const [taskItems, setTaskItems] = useState(tasks);
-    const {searchValue, delete:{deleteBox, deleteId, deleteTitle}} = state;
+    const {searchValue,delete:{deleteBox, deleteId, deleteTitle}} = state;
     const {useAllTaskStyles} = styleObjects();
     const classes = useAllTaskStyles();
     const router = useRouter();
     const {enqueueSnackbar} = useSnackbar();
+    console.log(searchValue);
 
     // passing task length
     useEffect(()=>{
         dispatch({type:'TOTAL_TASKS', payload: tasks.length})
     },[dispatch, tasks]);
 
-    // search function
+    // search functions
     useEffect(()=>{
         if(searchValue){
-            const filteredTasks = taskItems.filter(task=>
-                task.title.toLowerCase().includes(searchValue));
-            setTaskItems(filteredTasks);
-        }else{  
+            const filteredItems = tasks.filter(task=>
+            task.title.toLowerCase().includes(searchValue));
+            setTaskItems(filteredItems);
+        }else{
             setTaskItems(tasks);
         }
-    },[searchValue]);
+    },[searchValue])
 
     // delete
     const deleteTaskHandler = (id, title)=>{
@@ -51,13 +52,20 @@ const AllTasks = (props) => {
     const handleDeleteClose = ()=>{
       dispatch({type:'CLOSE_DELETE_BOX'})
     }
+    const clientSideDelete = ()=>{
+        const filteredItems = taskItems.filter(task=> task._id !== deleteId);
+        setTaskItems(filteredItems);
+    }
+
     const deleteTask = async ()=>{ 
         try{
-            const {data} = await axios.post('api/modifyTask/delete', {id: deleteId})
+            const {data} = await axios.post('api/modifyTask/delete', {id: deleteId});
             handleDeleteClose();
+            clientSideDelete(); // deletes the items from the client side
             enqueueSnackbar('Task has been deleted',
                 {variant:'success'}
             )
+            
         }catch(err){
             enqueueSnackbar(
                 'Unable to delete task',

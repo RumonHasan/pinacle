@@ -24,20 +24,19 @@ import {MdNotificationImportant} from 'react-icons/md';
 import {IoMdCreate} from 'react-icons/io';
 import { FaCalendar, FaPlus, FaTimes } from 'react-icons/fa';
 import { useRouter, Controller } from 'next/dist/client/router';
-import { useSnackbar } from 'notistack';
 
 const Sidebar = () => {
     const {state, dispatch} = useContext(TaskContext);
-    const {searchValue, taskLength} = state;
+    const {taskLength, searchValue} = state;
     const {useSidebarStyles} = styleObjects();
     const classes = useSidebarStyles();
     const router = useRouter();
-    // search
+
+    // handle search
     const handleSearch = (e)=>{
-        dispatch({type:'UPDATE_SEARCH_VALUE', payload: e.target.value});
+        dispatch({type:'UPDATE_SEARCH_VALUE', payload:e.target.value});
         router.push('/');
     }
-
 
     return (
         <Box display='flex' className={classes.sidebarBox} justifyContent='center' flexDirection='column'>
