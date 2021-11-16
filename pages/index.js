@@ -26,7 +26,6 @@ const AllTasks = (props) => {
     const classes = useAllTaskStyles();
     const router = useRouter();
     const {enqueueSnackbar} = useSnackbar();
-    console.log(searchValue);
 
     // passing task length
     useEffect(()=>{
@@ -40,14 +39,10 @@ const AllTasks = (props) => {
     const handleDeleteClose = ()=>{
       dispatch({type:'CLOSE_DELETE_BOX'})
     }
-    const clientSideDelete = ()=>{
-        const filteredItems = taskItems.filter(task=> task._id !== deleteId);
-        setTaskItems(filteredItems);
-    }
 
     const deleteTask = async ()=>{ 
         try{
-            const {data} = await axios.post('api/modifyTask/delete', {id: deleteId});
+            const {data} = await axios.post('api/task/delete', {id: deleteId});
             handleDeleteClose();
             enqueueSnackbar('Task has been deleted',
                 {variant:'success'}

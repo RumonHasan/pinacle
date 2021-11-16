@@ -11,7 +11,8 @@ const initialStates = {
         deleteBox: false,
         deleteId: '',
         deleteTitle: '',
-    }
+    },
+    comment:''
 }
 
 const reducer = (state, action)=>{
@@ -58,6 +59,12 @@ const reducer = (state, action)=>{
                     ...state.delete,
                     deleteBox:false,
                 }
+            }
+        // add comment
+        case 'ADD_COMMENT':
+            return{
+                ...state,
+                comment: action.payload
             }
     }
 }

@@ -143,11 +143,27 @@ const styleObjects = ()=>{
         }
     }))
 
+    const useTaskStyles = makeStyles(theme =>({
+        cardContainer:{
+            display: 'flex',
+            justifyContent:'center',
+            width: '100%',
+        },
+        taskCard:{
+            width: '800px',
+           margin: theme.spacing(2),
+        },
+        cardHeader:{
+            fontSize: 'large',
+        }
+    }));
+
     return{
         useLayoutStyles,
         useSidebarStyles,
         useAllTaskStyles,
         useAddTaskStyles,
+        useTaskStyles,
     }
 }
 

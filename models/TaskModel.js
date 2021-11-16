@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const taskScheme = new mongoose.Schema({
     title: {type: String, required: true},
     details: {type:String, required: true},
-    completed: {type:Boolean, required:true, default:false}
+    completed: {type:Boolean, required:true, default:false},
+    comment: [{type:String}]
 },{
     timestamps:true,
 });
