@@ -21,7 +21,6 @@ import { useSnackbar } from 'notistack';
 const AllTasks = (props) => {
     const {state, dispatch} = useContext(TaskContext)
     const {tasks} = props;
-    const [taskItems, setTaskItems] = useState(tasks);
     const {searchValue,delete:{deleteBox, deleteId, deleteTitle}} = state;
     const {useAllTaskStyles} = styleObjects();
     const classes = useAllTaskStyles();
@@ -33,17 +32,6 @@ const AllTasks = (props) => {
     useEffect(()=>{
         dispatch({type:'TOTAL_TASKS', payload: tasks.length})
     },[dispatch, tasks]);
-
-    // search functions
-    useEffect(()=>{
-        if(searchValue){
-            const filteredItems = tasks.filter(task=>
-            task.title.toLowerCase().includes(searchValue));
-            setTaskItems(filteredItems);
-        }else{
-            setTaskItems(tasks);
-        }
-    },[searchValue])
 
     // delete
     const deleteTaskHandler = (id, title)=>{
@@ -61,7 +49,6 @@ const AllTasks = (props) => {
         try{
             const {data} = await axios.post('api/modifyTask/delete', {id: deleteId});
             handleDeleteClose();
-            clientSideDelete(); // deletes the items from the client side
             enqueueSnackbar('Task has been deleted',
                 {variant:'success'}
             )
@@ -94,7 +81,7 @@ const AllTasks = (props) => {
             <Container className={classes.container}>
                     <Typography className={classes.title}>All Tasks</Typography>
                     <Grid container alignItems='center' className={classes.tasksGrid}>
-                    {taskItems.map((task, index)=>{
+                    {tasks.map((task, index)=>{
                         return (
                             <Grid item xs={12} key={index} className={classes.taskBlock}>
                                     <Container className={classes.taskContainer}>
