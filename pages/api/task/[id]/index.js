@@ -6,13 +6,23 @@ const handler = nextConnect();
 
 handler.get(async(req, res)=>{
     await database.connect();
-    const id = req.query._id;
-    const task = await Task.findById(id);
-    console.log(task);
+    const task = await Task.findById(req.query.id);
     await database.disconnect();
-    res.status(200).send({
-        ...task
-    })
+    res.send(task);
+});
+
+handler.post(async(req,res)=>{
+    await database.connect();
+    const task = await Task.findById(req.query.id);
+    if(task){
+        task.comment.push(req.body.comment);
+        await task.save();
+        await database.disconnect();
+        res.send({message:'Comment has been submitted'});
+    }else{
+        res.send({message:'Task has not been found'})
+    }
+ 
 })
 
 export default handler;

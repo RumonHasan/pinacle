@@ -22,19 +22,11 @@ const TaskScreen = (props) => {
     }
     const addCommentHandler = async ()=>{
         try{
-            if(comment){
-                const {data} = await axios.post(`/api/task/${task._id}`, {comment:comment});
-                console.log(data);
-                enqueueSnackbar(
-                    'Comment added',
-                    {variant:'success'}
-                )
-            }else{
-                enqueueSnackbar(
-                    'no comment has been entered yet',
-                    {variant:'error'}
-                )
-            }
+            await axios.post(`/api/task/${task._id}`, {comment:comment}); // posting the comment to the api
+            enqueueSnackbar(
+                'Comment added',
+                {variant:'success'}
+            )
         }catch(err){    
             enqueueSnackbar(
                 'Unable to add the comment',

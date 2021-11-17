@@ -34,7 +34,7 @@ import {TaskContext} from '../utils/taskManager';
        e.preventDefault();
        try{
         const {data} = await axios.post('/api/task/add', {title: taskForm.title, 
-        details: taskForm.details, completed: taskForm.completed}); // passing the data to the add handler
+        details: taskForm.details, completed: taskForm.completed, comment:[]}); // passing the data to the add handler
         enqueueSnackbar(
             'Task Has Been Added',
             {variant:'success'},
