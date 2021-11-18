@@ -155,6 +155,10 @@ const styleObjects = ()=>{
         },
         cardHeader:{
             fontSize: 'large',
+        },
+        commentList:{
+            maxHeight:'150px',
+            overflowY: 'auto',
         }
     }));
 

@@ -8,19 +8,25 @@ handler.get(async(req, res)=>{
     await database.connect();
     const task = await Task.findById(req.query.id);
     await database.disconnect();
-    res.send(task);
+    if(task){
+        res.send(task.comment);
+    }else{
+        res.status(404).send({message: 'Task and its comments were not found'})
+    }
 });
 
 handler.post(async(req,res)=>{
     await database.connect();
     const task = await Task.findById(req.query.id);
     if(task){
-        task.comment.push(req.body.comment);
-        await task.save();
+        task.comment.push(req.body.comment); // pushing the comments within the comment array
+        const commentedTask = await task.save();
         await database.disconnect();
-        res.send({message:'Comment has been submitted'});
+        res.send({
+            comment: commentedTask.comment
+        })
     }else{
-        res.send({message:'Task has not been found'})
+        res.send({message:'Unable to send comment in undeifine tasks'})
     }
  
 })

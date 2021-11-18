@@ -66,6 +66,11 @@ const reducer = (state, action)=>{
                 ...state,
                 comment: action.payload
             }
+        case 'CLEAR_COMMENT_FIELD':
+            return{
+                ...state,
+                comment: '',
+            }
     }
 }
 

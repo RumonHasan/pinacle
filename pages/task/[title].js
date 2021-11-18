@@ -1,4 +1,13 @@
-import { Card, CardContent, CardHeader, Grid, Container, Typography, CardActions, Button} from '@material-ui/core';
+import { Card, 
+CardContent, 
+CardHeader, 
+Grid, 
+Container,
+Typography, 
+CardActions, 
+Button,
+List,
+ListItem} from '@material-ui/core';
 import  TextField  from '@material-ui/core/TextField';
 import { useSnackbar } from 'notistack';
 import React, { useContext } from 'react'
@@ -14,7 +23,7 @@ const TaskScreen = (props) => {
     const {useTaskStyles} = styleObjects();
     const classes = useTaskStyles();
     const {state, dispatch} = useContext(TaskContext);
-    const {comment} = state;
+    const {comment} = state; // comment change handler
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     
     const commentHandler = (e)=>{
@@ -22,11 +31,12 @@ const TaskScreen = (props) => {
     }
     const addCommentHandler = async ()=>{
         try{
-            await axios.post(`/api/task/${task._id}`, {comment:comment}); // posting the comment to the api
+            await axios.post(`/api/task/${task._id}/comment`, {comment:comment}); // posting the comment to the api
             enqueueSnackbar(
                 'Comment added',
                 {variant:'success'}
-            )
+            );
+            dispatch({type:'CLEAR_COMMENT_FIELD'});
         }catch(err){    
             enqueueSnackbar(
                 'Unable to add the comment',
@@ -54,7 +64,17 @@ const TaskScreen = (props) => {
                             <Grid item xs={12}>
                                 <Typography variant='h5'>Comments:</Typography>
                             </Grid>
-
+                            <Grid item xs={12}>
+                                <List className={classes.commentList}>
+                                {task.comment.map((comment, index)=>{
+                                    return(
+                                       <ListItem key={index}>
+                                            <Typography>{comment}</Typography>
+                                       </ListItem>
+                                    )
+                                })}
+                                </List>
+                            </Grid>
                         </Grid>
 
                         <Grid container alignItems='center' style={{padding:'30px'}}>
