@@ -27,6 +27,11 @@ const AllTasks = (props) => {
     const router = useRouter();
     const {enqueueSnackbar} = useSnackbar();
 
+      // refreshing data
+      const refreshData = ()=>{
+        router.replace(router.asPath);
+    }
+
     // passing task length
     useEffect(()=>{
         dispatch({type:'TOTAL_TASKS', payload: tasks.length})
@@ -46,8 +51,8 @@ const AllTasks = (props) => {
             handleDeleteClose();
             enqueueSnackbar('Task has been deleted',
                 {variant:'success'}
-            )
-            
+            );
+            refreshData();
         }catch(err){
             enqueueSnackbar(
                 'Unable to delete task',

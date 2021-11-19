@@ -7,7 +7,13 @@ Typography,
 CardActions, 
 Button,
 List,
-ListItem} from '@material-ui/core';
+ListItem,
+Box,
+IconButton,
+Dialog,
+DialogActions,
+DialogContent,
+DialogTitle} from '@material-ui/core';
 import  TextField  from '@material-ui/core/TextField';
 import { useSnackbar } from 'notistack';
 import React, { useContext } from 'react'
@@ -17,17 +23,25 @@ import database from '../../utils/database';
 import styleObjects from '../../utils/styles';
 import { TaskContext } from '../../utils/taskManager';
 import axios from 'axios';
+import { FaTrash } from 'react-icons/fa';
+import { useRouter } from 'next/dist/client/router';
 
 const TaskScreen = (props) => {
+    const router = useRouter();
     const {task} = props;
     const {useTaskStyles} = styleObjects();
     const classes = useTaskStyles();
     const {state, dispatch} = useContext(TaskContext);
+    const {delete:{deleteBox, deleteId, deleteTitle}} = state;
     const {comment} = state; // comment change handler
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     
     const commentHandler = (e)=>{
         dispatch({type:'ADD_COMMENT', payload: e.target.value})
+    }
+    // refreshing data
+    const refreshData = ()=>{
+        router.replace(router.asPath);
     }
     const addCommentHandler = async ()=>{
         try{
@@ -37,6 +51,7 @@ const TaskScreen = (props) => {
                 {variant:'success'}
             );
             dispatch({type:'CLEAR_COMMENT_FIELD'});
+            refreshData();
         }catch(err){    
             enqueueSnackbar(
                 'Unable to add the comment',
@@ -44,8 +59,61 @@ const TaskScreen = (props) => {
             )
         }
     }
+
+    // delete task
+        // delete
+        const deleteTaskHandler = (id, title)=>{
+            dispatch({type:'OPEN_DELETE_BOX', payload:{id, title}})
+        }
+        const handleDeleteClose = ()=>{
+          dispatch({type:'CLOSE_DELETE_BOX'})
+        }
+    
+        const deleteTask = async ()=>{ 
+            try{
+                const {data} = await axios.post('/api/task/delete', {id: deleteId});
+                handleDeleteClose();
+                enqueueSnackbar('Task has been deleted',
+                    {variant:'success'}
+                );
+                router.push('/');
+            }catch(err){
+                enqueueSnackbar(
+                    'Unable to delete task',
+                    {variant:'error'}
+                )
+            }
+        }
+
+    // delete comment
+    const deleteComment = async (index)=>{
+        try{    
+            const {data} = await axios.post('/api/')
+        }catch(err){
+            enqueueSnackbar(
+                'Unable to delete Comment',
+                {variant:'error'}
+            )
+        }
+    }
+
     return (
         <MainLayout title={task.title}>
+           <Dialog
+            open={deleteBox}
+            onClose={handleDeleteClose}
+            >
+                <DialogTitle>
+                    {deleteTitle} will be permanently deleted!
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography>You will not be able to undo this action!</Typography>
+                </DialogContent>
+                <DialogActions style={{display:'flex', justifyContent:'center'}}>
+                    <Button variant='contained' onClick={handleDeleteClose}>Cancel</Button>
+                    <Button variant='contained' onClick={deleteTask}>Delete</Button>
+                </DialogActions>
+            </Dialog>
             <Container className={classes.cardContainer}>
                 <Card className={classes.taskCard}>
                     <CardContent>
@@ -54,8 +122,8 @@ const TaskScreen = (props) => {
                             <Grid item xs={12}>
                                 <Typography variant='h5'>Details:</Typography>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Typography variant='h6'>{task.details}</Typography>
+                            <Grid item xs={12} className={classes.detailsBlock}>
+                                <Typography variant='h6' style={{fontSize:'19px'}}>{task.details}</Typography>
                             </Grid>
                             <Grid item sm></Grid>
                         </Grid>
@@ -68,8 +136,11 @@ const TaskScreen = (props) => {
                                 <List className={classes.commentList}>
                                 {task.comment.map((comment, index)=>{
                                     return(
-                                       <ListItem key={index}>
+                                       <ListItem className={classes.comment} key={index}>
                                             <Typography>{comment}</Typography>
+                                            <Box display='flex'>
+                                                <IconButton onClick={()=>deleteComment(index)}><FaTrash/></IconButton>
+                                            </Box>
                                        </ListItem>
                                     )
                                 })}
@@ -97,7 +168,7 @@ const TaskScreen = (props) => {
                         </Grid>
                     </CardContent>
                     <CardActions>
-                        <Button variant='contained'>Delete Task</Button>
+                        <Button variant='contained' onClick={()=>deleteTaskHandler(task._id,task.title)}>Delete Task</Button>
                         <Button variant='contained'>Edit</Button>
                     </CardActions>
                 </Card>

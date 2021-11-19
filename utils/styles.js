@@ -157,8 +157,19 @@ const styleObjects = ()=>{
             fontSize: 'large',
         },
         commentList:{
-            maxHeight:'150px',
+            maxHeight:'170px',
             overflowY: 'auto',
+        },
+        comment:{
+            borderBottom: '0.5px solid gray',
+            marginBottom:theme.spacing(0.4),
+            display:'flex',
+            justifyContent:'space-between',
+        },
+        // comment details
+        detailsBlock:{
+            border: '1px solid gray',
+            padding: theme.spacing(1),
         }
     }));
 
