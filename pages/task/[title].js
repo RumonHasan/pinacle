@@ -28,7 +28,7 @@ import { useRouter } from 'next/dist/client/router';
 
 const TaskScreen = (props) => {
     const router = useRouter();
-    const {task} = props;
+    const {task, comments} = props;
     const {useTaskStyles} = styleObjects();
     const classes = useTaskStyles();
     const {state, dispatch} = useContext(TaskContext);
@@ -86,9 +86,10 @@ const TaskScreen = (props) => {
         }
 
     // delete comment
-    const deleteComment = async (index)=>{
+    const deleteComment = async (commentId)=>{
+        console.log(commentId);
         try{    
-            const {data} = await axios.post('/api/')
+            const {data} = await axios.post(`/api/task/${task._id}/deleteComment`, {commentId:commentId})
         }catch(err){
             enqueueSnackbar(
                 'Unable to delete Comment',
@@ -134,12 +135,12 @@ const TaskScreen = (props) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <List className={classes.commentList}>
-                                {task.comment.map((comment, index)=>{
+                                {comments?.map((commentItem, index)=>{
                                     return(
                                        <ListItem className={classes.comment} key={index}>
-                                            <Typography>{comment}</Typography>
+                                            <Typography>{commentItem.comment}</Typography>
                                             <Box display='flex'>
-                                                <IconButton onClick={()=>deleteComment(index)}><FaTrash/></IconButton>
+                                                <IconButton onClick={()=>deleteComment(commentItem._id)}><FaTrash/></IconButton>
                                             </Box>
                                        </ListItem>
                                     )
@@ -187,7 +188,8 @@ export const getServerSideProps = async(context)=>{
     await database.disconnect();
     return{// individual task returned
         props:{
-            task:database.convertDocToObj(task)
+            task:database.convertDocToObj(task),
+            comments:task.comment?.map(database.convertDocToObj)
         }
     }
 }

@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import nextConnect from "next-connect";
 import Task from "../../../../models/TaskModel";
 import database from "../../../../utils/database";
@@ -19,8 +20,13 @@ handler.post(async(req,res)=>{
     await database.connect();
     const task = await Task.findById(req.query.id);
     if(task){
-        task.comment.push(req.body.comment); // pushing the comments within the comment array
+        // new comment object
+        const newComment ={ 
+            comment: req.body.comment,
+        }
+        task.comment.push(newComment); // pushing the comments within the comment array
         const commentedTask = await task.save();
+        console.log(task);
         await database.disconnect();
         res.send({
             comment: commentedTask.comment

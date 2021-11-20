@@ -127,7 +127,10 @@ export const getServerSideProps = async ()=> {
     await database.disconnect();
     return{
         props:{
-            tasks: tasks.map(database.convertDocToObj)
+            tasks: tasks.map(database.convertDocToObj),
+            comments: tasks.map(taskItem => 
+                taskItem.comment.map(commentItem=>
+                    database.convertDocToObj(commentItem)))
         }
     }
 }
