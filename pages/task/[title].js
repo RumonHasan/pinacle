@@ -87,9 +87,13 @@ const TaskScreen = (props) => {
 
     // delete comment
     const deleteComment = async (commentId)=>{
-        console.log(commentId);
         try{    
-            const {data} = await axios.post(`/api/task/${task._id}/deleteComment`, {commentId:commentId})
+            // comment deletion id passed
+            const {data} = await axios.post(`/api/task/${task._id}/deleteComment`, {commentId:commentId});
+            enqueueSnackbar('Comment has been deleted',{
+                variant:'success',
+            });
+            refreshData();
         }catch(err){
             enqueueSnackbar(
                 'Unable to delete Comment',

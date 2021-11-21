@@ -8,11 +8,22 @@ const deleteCommentHandler = nextConnect();
 deleteCommentHandler.post(async(req, res)=>{
     await database.connect();
     const task = await Task.findById(req.query.id);
-    console.log(req.body.commentId);
     if(task){
-       
+        const newComments = task.comment.filter((commentItem)=> 
+        commentItem._id.toString() !== req.body.commentId);
+        console.log(newComments);
+        await Task.updateOne({ // updating the task new comments;
+            comment: newComments
+        })
+        const deletedCommentTask = await task.save();
+        await database.disconnect();
+        res.send({
+            message:'comment has been deleted',
+            deletedCommentTask
+        });
+    }else{
+        res.statusCode(404).send({message:'Cannot find the task'})
     }
-    await database.disconnect();
 });
 
 export default deleteCommentHandler;
