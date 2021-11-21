@@ -113,14 +113,14 @@ const MainLayout = ({children, title}) => {
                                     <Container className={classes.loginContainer}>
                                         <NextLink href='/login' passHref>
                                             <Link>
-                                                <Button variant='contained'>
+                                                <Button variant='contained' className={classes.loginBtn}>
                                                     Login
                                                 </Button>
                                             </Link>
                                         </NextLink>
                                         <NextLink href='/register' passHref>
                                             <Link>
-                                                <Button variant='contained'>
+                                                <Button variant='contained' className={classes.loginBtn}>
                                                     Register
                                                 </Button>
                                             </Link>

@@ -55,6 +55,21 @@ const styleObjects = ()=>{
         drawerItems:{
             width:'200px',
             display:'flex',
+        },
+        // login box designs
+        loginBox:{
+            padding:theme.spacing(3)
+        },
+        loginContainer:{
+            display:'flex',
+            justifyContent:'space-between',
+            '& a':{
+                color:colors.textMain,
+                textDecoration:'none',
+            },
+        },
+        loginBtn:{
+            margin:theme.spacing(1),
         }
     }))
 
@@ -194,12 +209,26 @@ const styleObjects = ()=>{
         }
     }));
 
+    const useLoginStyles = makeStyles(theme=>({
+        formBox:{
+            height: '100vh',
+            alignItems:'center',
+        },
+        form:{
+            border: `2px solid gray`,
+            padding:theme.spacing(4),
+            borderRadius: 10,
+
+        }
+    }))
+
     return{
         useLayoutStyles,
         useSidebarStyles,
         useAllTaskStyles,
         useAddTaskStyles,
         useTaskStyles,
+        useLoginStyles,
     }
 }
 

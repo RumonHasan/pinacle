@@ -12,7 +12,9 @@ const initialStates = {
         deleteId: '',
         deleteTitle: '',
     },
-    comment:''
+    comment:'',
+    // user info
+    userInfo: '',
 }
 
 const reducer = (state, action)=>{
