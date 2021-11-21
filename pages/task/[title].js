@@ -13,7 +13,8 @@ IconButton,
 Dialog,
 DialogActions,
 DialogContent,
-DialogTitle} from '@material-ui/core';
+DialogTitle,
+Badge} from '@material-ui/core';
 import  TextField  from '@material-ui/core/TextField';
 import { useSnackbar } from 'notistack';
 import React, { useContext } from 'react'
@@ -135,20 +136,24 @@ const TaskScreen = (props) => {
 
                         <Grid container alignItems='center' style={{padding:'30px'}}>
                             <Grid item xs={12}>
-                                <Typography variant='h5'>Comments:</Typography>
+                                <Badge badgeContent={comments ? comments.length: 0} color='primary'>
+                                    <Typography variant='h5'>Comments:</Typography>
+                                </Badge>
                             </Grid>
                             <Grid item xs={12}>
                                 <List className={classes.commentList}>
-                                {comments?.map((commentItem, index)=>{
+                                { comments.length !== 0 ? comments?.map((commentItem, index)=>{
                                     return(
                                        <ListItem className={classes.comment} key={index}>
                                             <Typography>{commentItem.comment}</Typography>
+                                            <Typography className={classes.commentTimestamp}>{commentItem.createdAt.split('')}</Typography>
                                             <Box display='flex'>
                                                 <IconButton onClick={()=>deleteComment(commentItem._id)}><FaTrash/></IconButton>
                                             </Box>
                                        </ListItem>
                                     )
-                                })}
+                                }): 
+                                <Typography className={classes.noComment}>No comments yet</Typography>}
                                 </List>
                             </Grid>
                         </Grid>

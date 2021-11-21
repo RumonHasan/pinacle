@@ -11,8 +11,7 @@ deleteCommentHandler.post(async(req, res)=>{
     if(task){
         const newComments = task.comment.filter((commentItem)=> 
         commentItem._id.toString() !== req.body.commentId);
-        console.log(newComments);
-        await Task.updateOne({ // updating the task new comments;
+        await task.updateOne({ // updating the task new comments;
             comment: newComments
         })
         const deletedCommentTask = await task.save();

@@ -26,7 +26,6 @@ handler.post(async(req,res)=>{
         }
         task.comment.push(newComment); // pushing the comments within the comment array
         const commentedTask = await task.save();
-        console.log(task);
         await database.disconnect();
         res.send({
             comment: commentedTask.comment

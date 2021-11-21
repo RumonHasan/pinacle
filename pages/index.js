@@ -21,16 +21,33 @@ import { useSnackbar } from 'notistack';
 const AllTasks = (props) => {
     const {state, dispatch} = useContext(TaskContext)
     const {tasks} = props;
+    const [taskItems, setTaskItems] = useState(tasks); // task state for client side
     const {searchValue,delete:{deleteBox, deleteId, deleteTitle}} = state;
     const {useAllTaskStyles} = styleObjects();
     const classes = useAllTaskStyles();
     const router = useRouter();
     const {enqueueSnackbar} = useSnackbar();
 
+    console.log(searchValue);
+
       // refreshing data
       const refreshData = ()=>{
         router.replace(router.asPath);
     }
+
+    // search function
+    useEffect(()=>{
+        const fetchSearchTask = ()=>{
+            if(searchValue){
+                const filterTasks = taskItems.filter((task)=>
+                task.title.toLowerCase().includes(searchValue));
+                setTaskItems(filterTasks);
+            }else{
+                setTaskItems(tasks);
+            }
+        }
+        fetchSearchTask();
+    },[searchValue])
 
     // passing task length
     useEffect(()=>{
@@ -45,6 +62,14 @@ const AllTasks = (props) => {
       dispatch({type:'CLOSE_DELETE_BOX'})
     }
 
+    // client side delete
+    const deleteTaskClient = (deleteId)=>{
+        const newItems = taskItems.filter((task)=>{
+            return task._id !== deleteId
+        });
+        setTaskItems(newItems);
+    }
+
     const deleteTask = async ()=>{ 
         try{
             const {data} = await axios.post('api/task/delete', {id: deleteId});
@@ -52,6 +77,7 @@ const AllTasks = (props) => {
             enqueueSnackbar('Task has been deleted',
                 {variant:'success'}
             );
+            deleteTaskClient(deleteId);
             refreshData();
         }catch(err){
             enqueueSnackbar(
@@ -81,7 +107,7 @@ const AllTasks = (props) => {
             <Container className={classes.container}>
                     <Typography className={classes.title}>All Tasks</Typography>
                     <Grid container alignItems='center' className={classes.tasksGrid}>
-                    {tasks.map((task, index)=>{
+                    {taskItems.map((task, index)=>{
                         return (
                             <Grid item xs={12} key={index} className={classes.taskBlock}>
                                     <Container className={classes.taskContainer}>
@@ -96,6 +122,9 @@ const AllTasks = (props) => {
                                                 label={task.title}/>
                                             </RadioGroup>
                                         </FormControl>
+                                        <Typography className={classes.taskTimestamp}>
+                                            {task.createdAt.toString()}
+                                        </Typography>
                                         <Box className={classes.taskBtn}>
                                             <NextLink href={`/task/${task.title}`} passHref>
                                                 <Link>
@@ -125,6 +154,7 @@ export const getServerSideProps = async ()=> {
     await database.connect();
     const tasks = await Task.find({}).lean();
     await database.disconnect();
+    // conversion of comments to json objects is necessary
     return{
         props:{
             tasks: tasks.map(database.convertDocToObj),

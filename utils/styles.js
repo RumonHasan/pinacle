@@ -123,7 +123,8 @@ const styleObjects = ()=>{
             justifyContent:'space-between',
             '& a':{
                 color:colors.mainWhite
-            }
+            },
+            position: 'relative',
         },
         taskTitle:{
             fontWeight:'bold',
@@ -133,6 +134,13 @@ const styleObjects = ()=>{
         taskBtn:{
             display:'flex'
 
+        },
+        taskTimestamp:{
+            position: 'absolute',
+            bottom: 0,
+            padding:theme.spacing(0.5),
+            fontSize: 'x-small',
+            opacity: 0.5
         }
     }));
 
@@ -165,11 +173,24 @@ const styleObjects = ()=>{
             marginBottom:theme.spacing(0.4),
             display:'flex',
             justifyContent:'space-between',
+            position: 'relative',
         },
         // comment details
         detailsBlock:{
             border: '1px solid gray',
             padding: theme.spacing(1),
+        },
+        commentTimestamp:{
+            position: 'absolute',
+            bottom: 0,
+            fontSize: 'x-small',
+            color: 'gray',
+            opacity: 0.9
+        },
+        noComment:{
+            fontSize:'small',
+            color:'gray',
+            opacity: 0.95
         }
     }));
 
