@@ -17,7 +17,9 @@ IconButton,
 Drawer,
 List,
 ListItem,
-ListSubheader
+ListSubheader,
+Popover,
+Dialog
 } from '@material-ui/core';
 import {CgDarkMode} from 'react-icons/cg';
 import {FaSearch} from 'react-icons/fa';
@@ -37,6 +39,14 @@ const MainLayout = ({children, title}) => {
     const {darkMode} = state;
     const {useLayoutStyles} = styleObjects();
     const classes = useLayoutStyles();
+    // login pop
+    const [loginPop, setLoginPop] = useState(false);
+    const handleLoginPopOpen = (e)=>{
+        setLoginPop(true);
+    };
+    const handleClosePop = ()=>{
+        setLoginPop(false);
+    }
 
     // dark mode controls
     const darkmodeChangeHandler = ()=>{
@@ -90,7 +100,34 @@ const MainLayout = ({children, title}) => {
                             <CgDarkMode/>
                         </Button>
 
-                        <Avatar style={{cursor:'pointer'}}>R</Avatar>
+                            <Avatar style={{cursor:'pointer'}} onClick={handleLoginPopOpen}>R</Avatar>
+                            <Dialog
+                                open={loginPop}
+                                onClose={handleClosePop}
+                                anchorOrigin={{
+                                    vertical:'bottom',
+                                    horizontal:'center'
+                                }}>
+                                <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center' className={classes.loginBox}>
+                                    <Typography>Sign in to your account!</Typography>
+                                    <Container className={classes.loginContainer}>
+                                        <NextLink href='/login' passHref>
+                                            <Link>
+                                                <Button variant='contained'>
+                                                    Login
+                                                </Button>
+                                            </Link>
+                                        </NextLink>
+                                        <NextLink href='/register' passHref>
+                                            <Link>
+                                                <Button variant='contained'>
+                                                    Register
+                                                </Button>
+                                            </Link>
+                                        </NextLink>
+                                    </Container>
+                                </Box>
+                            </Dialog>
                         
                         <IconButton onClick={openDrawer} className={classes.settingsBtn}>
                             <AiFillSetting/>
