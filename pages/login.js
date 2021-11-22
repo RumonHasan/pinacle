@@ -2,10 +2,13 @@ import React, { useContext, useState } from 'react';
 import MainLayout from '../components/MainLayout';
 import { Controller, useForm } from 'react-hook-form';
 import { TaskContext } from '../utils/taskManager';
-import { Box, List, ListItem, TextField, Typography } from '@material-ui/core';
+import { Box, List, ListItem, TextField, Typography, Button, Link } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/dist/client/router';
 import styleObjects from '../utils/styles';
+import NextLink from 'next/link';
+import GoogleLogin from 'react-google-login';
+import Cookies from 'js-cookie';
 
 const Login = () => {
     const {state,dispatch} = useContext(TaskContext);
@@ -19,7 +22,7 @@ const Login = () => {
     const classes = useLoginStyles();
 
     // form submit handler
-    const submitHandler = async ()=>{
+    const submitHandler = async ()=>{ // custom login component
         closeSnackbar();
         try{
 
@@ -28,6 +31,27 @@ const Login = () => {
                 variant:'error'
             })
         }
+    }
+    console.log(userInfo);
+    // google login
+    const googleSuccess = async (res)=>{
+        const result = res?.profileObj;
+        const token = res?.tokenId;
+        try{
+            dispatch({type:'ADD_USER_INFO', payload: {result, token}});
+            Cookies.set('userInfo', result);
+        }catch(err){
+            enqueueSnackbar('failed login',
+            {variant:'error'})
+        }
+    }
+    const googleFailure = (error)=>{
+        closeSnackbar();
+        console.log(error);
+        enqueueSnackbar(
+            'Sign in was unsuccessful',
+            {variant:'error'}
+        )
     }
     return (
         <MainLayout title='Login'>
@@ -65,11 +89,66 @@ const Login = () => {
                                 )}
                             ></Controller>
                         </ListItem>
-
                         <ListItem>
                             <Controller
+                                name='password'
+                                control={control}
+                                defaultValue=''
+                                rules={{
+                                    required:true,
+                                    minLength: 5
+                                }}
+                                render={({field})=>(
+                                    <TextField
+                                        variant='outlined'
+                                        fullWidth
+                                        id='password'
+                                        label='Password'
+                                        inputProps={{type:'password'}}
+                                        error={Boolean(errors.password)}
+                                        helperText={
+                                            errors.password
+                                            ? errors.password.type === 'minlength'
+                                                ? 'Password is too small'
+                                                : 'Password is required'
+                                            :''
+                                        }
+                                        {...field}
+                                    />
+                                )}>
+                            </Controller>
+                        </ListItem>
 
-                            />
+                        <ListItem>
+                            <Typography style={{display:'flex'}}>Already Have an account? 
+                            <NextLink href='/register'>
+                                <Link>
+                                    <Typography style={{cursor:'pointer'}}>Register</Typography>
+                                </Link>
+                            </NextLink></Typography>
+                        </ListItem>
+                           
+                       <ListItem>
+                           <Button variant='contained' type='submit'>Login</Button>
+                       </ListItem>
+
+                       <ListItem>
+                            <GoogleLogin
+                                clientId='963986818059-jg6cmm0ge7p9k9jk7gid9304p92773f0.apps.googleusercontent.com'
+                                render={(renderProps)=>(
+                                    <Button
+                                        onClick={renderProps.onClick}
+                                        color='primary'
+                                        className={classes.googleLogin}
+                                        fullWidth
+                                        variant='contained'>
+                                        Google Sign In
+                                    </Button>
+                                )}
+                                onSuccess={googleSuccess}
+                                onFailure={googleFailure}
+                                cookiePolicy='single_host_origin'
+                            />        
                         </ListItem>
                     </List>
                 </form>

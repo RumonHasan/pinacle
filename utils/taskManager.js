@@ -14,7 +14,10 @@ const initialStates = {
     },
     comment:'',
     // user info
-    userInfo: '',
+    userInfo: {
+        data: {},
+        token: ''
+    },
 }
 
 const reducer = (state, action)=>{
@@ -72,6 +75,17 @@ const reducer = (state, action)=>{
             return{
                 ...state,
                 comment: '',
+            }
+        // USER INFO
+        case 'ADD_USER_INFO':
+            const {result, token} = action.payload;
+            return {
+                ...state,
+                userInfo: {
+                    ...state.userInfo,
+                    data: result,
+                    token: token,
+                }
             }
     }
 }

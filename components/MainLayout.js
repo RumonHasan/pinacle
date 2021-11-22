@@ -103,11 +103,7 @@ const MainLayout = ({children, title}) => {
                             <Avatar style={{cursor:'pointer'}} onClick={handleLoginPopOpen}>R</Avatar>
                             <Dialog
                                 open={loginPop}
-                                onClose={handleClosePop}
-                                anchorOrigin={{
-                                    vertical:'bottom',
-                                    horizontal:'center'
-                                }}>
+                                onClose={handleClosePop}>
                                 <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center' className={classes.loginBox}>
                                     <Typography>Sign in to your account!</Typography>
                                     <Container className={classes.loginContainer}>

@@ -218,6 +218,8 @@ const styleObjects = ()=>{
             border: `2px solid gray`,
             padding:theme.spacing(4),
             borderRadius: 10,
+            width: '450px',
+            maxWidth: '500px',
 
         }
     }))

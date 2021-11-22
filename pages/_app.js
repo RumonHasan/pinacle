@@ -2,6 +2,7 @@ import { SnackbarProvider } from 'notistack';
 import React from 'react'
 import '../styles/globals.css';
 import { TaskProvider } from '../utils/taskManager';
+import {FormProvider} from 'react-hook-form';
 
 function MyApp({ Component, pageProps }) {
   React.useEffect(()=>{ // rmeoving server side rendering of material ui elements
@@ -12,9 +13,11 @@ function MyApp({ Component, pageProps }) {
   },[])
   return (
   <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal:'center'}}>
-    <TaskProvider>
-      <Component {...pageProps} />
-    </TaskProvider>
+    <FormProvider>
+      <TaskProvider>
+        <Component {...pageProps} />
+      </TaskProvider>
+    </FormProvider>
   </SnackbarProvider>
   );
 }
