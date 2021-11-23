@@ -28,8 +28,6 @@ const AllTasks = (props) => {
     const router = useRouter();
     const {enqueueSnackbar} = useSnackbar();
 
-    console.log(searchValue);
-
       // refreshing data
       const refreshData = ()=>{
         router.replace(router.asPath);
@@ -61,6 +59,8 @@ const AllTasks = (props) => {
     const handleDeleteClose = ()=>{
       dispatch({type:'CLOSE_DELETE_BOX'})
     }
+
+    console.log(taskItems);
 
     // client side delete
     const deleteTaskClient = (deleteId)=>{

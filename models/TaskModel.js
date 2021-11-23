@@ -8,6 +8,7 @@ const commentSchema = new mongoose.Schema({
 })
 
 const taskScheme = new mongoose.Schema({
+    userToken:{type:String, required:true},
     title: {type: String, required: true},
     details: {type:String, required: true},
     completed: {type:Boolean, required:true, default:false},

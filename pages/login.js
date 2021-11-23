@@ -10,6 +10,7 @@ import NextLink from 'next/link';
 import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
+import axios from 'axios';
 
 const Login = () => {
     const {state,dispatch} = useContext(TaskContext);
@@ -32,19 +33,24 @@ const Login = () => {
         }
     },[router, userInfo])
 
-    // form submit handler
-    const submitHandler = async ()=>{ // custom login component
+    // form submit handler for custom login
+    const submitHandler = async ({email, password})=>{ // custom login component
         closeSnackbar();
         try{
-
+            const {data} = await axios.post('/api/user/login', {email, password});
+            dispatch({type: 'ADD_USER_INFO_CUSTOM', payload:data});
+            Cookies.set('userInfo', data);
+            router.push('/');
+            enqueueSnackbar('Login Succesful',
+            {variant:'success'});
         }catch(err){
-            enqueueSnackbar(err.message, {
+            enqueueSnackbar('unable to login', {
                 variant:'error'
             })
         }
-    }
-    console.log(userInfo);
-    // google login
+    };
+
+    // google login -- to be continued
     const googleSuccess = async (res)=>{
         const result = res?.profileObj;
         const token = res?.tokenId;

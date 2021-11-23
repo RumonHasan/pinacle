@@ -27,7 +27,7 @@ import { useRouter, Controller } from 'next/dist/client/router';
 
 const Sidebar = () => {
     const {state, dispatch} = useContext(TaskContext);
-    const {taskLength, searchValue} = state;
+    const {taskLength, searchValue, userInfo} = state;
     const {useSidebarStyles} = styleObjects();
     const classes = useSidebarStyles();
     const router = useRouter();
@@ -110,7 +110,7 @@ const Sidebar = () => {
             </Container>
 
             <Container className={classes.newTaskContainerBtn}>
-                <NextLink href='/addTask' passHref>
+                <NextLink href={userInfo ? '/addTask': '/login'} passHref>
                     <Button variant='outlined' style={{whiteSpace:'nowrap'}}>
                         <FaPlus/> Add A New Task
                     </Button>

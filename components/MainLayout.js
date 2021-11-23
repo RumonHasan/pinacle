@@ -36,6 +36,7 @@ import {BiLogOut} from 'react-icons/bi';
 import Image from 'next/image';
 import { useRouter } from 'next/dist/client/router';
 import { useSnackbar } from 'notistack';
+import { GoogleLogout } from 'react-google-login';
 
 const MainLayout = ({children, title}) => {
     const {state, dispatch} = useContext(TaskContext);
@@ -53,6 +54,9 @@ const MainLayout = ({children, title}) => {
     const handleClosePop = ()=>{
         setLoginPop(false);
     }
+
+    //client id
+    const clientId = '963986818059-jg6cmm0ge7p9k9jk7gid9304p92773f0.apps.googleusercontent.com';
 
     // dark mode controls
     const darkmodeChangeHandler = ()=>{
@@ -87,6 +91,7 @@ const MainLayout = ({children, title}) => {
     const logoutHandler = ()=>{
         dispatch({type:'LOGOUT_USER'});
         router.push('/');
+        Cookies.remove('userInfo');
         enqueueSnackbar('Logged out successfully',
         {variant:'success'});
         handleClosePop();
@@ -125,11 +130,7 @@ const MainLayout = ({children, title}) => {
                                 <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center' className={classes.loginBox}>
                                     <Typography>{userInfo ? userInfo.name: 'Sign in to your account!'}</Typography>
                                     <Container className={classes.loginContainer}>
-                                        {userInfo ? 
-                                        <Button onClick={logoutHandler} variant='contained' className={classes.loginBtn}>
-                                            Logout
-                                        </Button>
-                                        :
+                                        {userInfo === null ? 
                                         <><NextLink href='/login' passHref>
                                             <Link>
                                                 <Button variant='contained' className={classes.loginBtn}>
@@ -143,7 +144,18 @@ const MainLayout = ({children, title}) => {
                                                     Register
                                                 </Button>
                                             </Link>
-                                        </NextLink></>}
+                                        </NextLink></>
+                                        :
+                                        <GoogleLogout
+                                            clientId={clientId}
+                                            render={(renderProps)=>(
+                                            <Button onClick={renderProps.onClick} variant='contained' className={classes.loginBtn}>
+                                                Logout<BiLogOut/>
+                                            </Button>
+                                            )}
+                                            onLogoutSuccess={logoutHandler}
+                                        />
+                                        }
                                     </Container>
                                 </Box>
                             </Dialog>

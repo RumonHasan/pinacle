@@ -7,9 +7,11 @@ const handler = nextConnect();
 handler.post(async(req,res)=>{
     await database.connect();
     const newTask = new Task({
+        userToken: req.body.userToken,
         title: req.body.title,
         details: req.body.details,
         completed: req.body.completed,
+        comment: req.body.comment,
     })
     const tasks = await newTask.save();
     await database.disconnect();

@@ -14,7 +14,9 @@ const initialStates = {
     },
     comment:'',
     // user info
-    userInfo: {},
+    userInfo: Cookies.get('userInfo') ?
+    JSON.parse(JSON.stringify(Cookies.get('userInfo'))) :
+    null,
 
     userToken: '',
 }
@@ -76,6 +78,13 @@ const reducer = (state, action)=>{
                 comment: '',
             }
         // USER INFO
+            // custom User
+
+        case 'ADD_USER_INFO_CUSTOM':
+            return{
+                ...state,
+                userInfo: action.payload,
+            }
         case 'ADD_USER_INFO':
             return {
                 ...state,
@@ -86,8 +95,14 @@ const reducer = (state, action)=>{
             return{
                 ...state,
                 userInfo: null,
-                userToken: null,
+                userToken: '',
             }
+        
+        // default 
+        default :
+        return {
+            ...state
+        }
     }
 }
 

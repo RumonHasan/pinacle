@@ -11,7 +11,8 @@ import { useRouter } from 'next/dist/client/router';
 import {TaskContext} from '../utils/taskManager';
 
  const AddTask = () => {
-    const {dispatch} = useContext(TaskContext);
+    const {state,dispatch} = useContext(TaskContext);
+    const {userInfo} = state;
     const {useAddTaskStyles} = styleObjects();
     const classes = useAddTaskStyles();
     const router = useRouter();
@@ -33,7 +34,7 @@ import {TaskContext} from '../utils/taskManager';
     const handleAddTask = async (e)=>{
        e.preventDefault();
        try{
-        const {data} = await axios.post('/api/task/add', {title: taskForm.title, 
+        const {data} = await axios.post('/api/task/add', {userToken:userInfo.userToken,title: taskForm.title, 
         details: taskForm.details, completed: taskForm.completed, comment:[]}); // passing the data to the add handler
         enqueueSnackbar(
             'Task Has Been Added',
