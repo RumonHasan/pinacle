@@ -14,10 +14,9 @@ const initialStates = {
     },
     comment:'',
     // user info
-    userInfo: {
-        data: {},
-        token: ''
-    },
+    userInfo: {},
+
+    userToken: '',
 }
 
 const reducer = (state, action)=>{
@@ -78,14 +77,16 @@ const reducer = (state, action)=>{
             }
         // USER INFO
         case 'ADD_USER_INFO':
-            const {result, token} = action.payload;
             return {
                 ...state,
-                userInfo: {
-                    ...state.userInfo,
-                    data: result,
-                    token: token,
-                }
+                userInfo: action.payload.result,
+                userToken: action.payload.token,
+            }
+        case 'LOGOUT_USER':
+            return{
+                ...state,
+                userInfo: null,
+                userToken: null,
             }
     }
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import MainLayout from '../components/MainLayout';
 import { Controller, useForm } from 'react-hook-form';
 import { TaskContext } from '../utils/taskManager';
@@ -9,6 +9,7 @@ import styleObjects from '../utils/styles';
 import NextLink from 'next/link';
 import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie';
+import Image from 'next/image';
 
 const Login = () => {
     const {state,dispatch} = useContext(TaskContext);
@@ -20,6 +21,16 @@ const Login = () => {
     // styles
     const {useLoginStyles} = styleObjects();
     const classes = useLoginStyles();
+
+    // google client id
+    const clientId = '963986818059-jg6cmm0ge7p9k9jk7gid9304p92773f0.apps.googleusercontent.com';
+
+    // jumping back to home
+    useEffect(()=>{
+        if(userInfo){
+            router.push('/')
+        }
+    },[router, userInfo])
 
     // form submit handler
     const submitHandler = async ()=>{ // custom login component
@@ -39,7 +50,12 @@ const Login = () => {
         const token = res?.tokenId;
         try{
             dispatch({type:'ADD_USER_INFO', payload: {result, token}});
-            Cookies.set('userInfo', result);
+            // Cookies.set('userInfo', result);
+            enqueueSnackbar(
+                'Login Successful',
+                {variant:'success'}
+            )
+            router.push('/');// redirect back to home
         }catch(err){
             enqueueSnackbar('failed login',
             {variant:'error'})
@@ -134,7 +150,7 @@ const Login = () => {
 
                        <ListItem>
                             <GoogleLogin
-                                clientId='963986818059-jg6cmm0ge7p9k9jk7gid9304p92773f0.apps.googleusercontent.com'
+                                clientId={clientId}
                                 render={(renderProps)=>(
                                     <Button
                                         onClick={renderProps.onClick}

@@ -33,12 +33,18 @@ import Sidebar from './Sidebar';
 import {AiFillSetting} from 'react-icons/ai';
 import {MdInvertColors} from 'react-icons/md';
 import {BiLogOut} from 'react-icons/bi';
+import Image from 'next/image';
+import { useRouter } from 'next/dist/client/router';
+import { useSnackbar } from 'notistack';
 
 const MainLayout = ({children, title}) => {
     const {state, dispatch} = useContext(TaskContext);
+    const {userInfo} = state;
     const {darkMode} = state;
     const {useLayoutStyles} = styleObjects();
     const classes = useLayoutStyles();
+    const router = useRouter();
+    const {enqueueSnackbar} = useSnackbar();
     // login pop
     const [loginPop, setLoginPop] = useState(false);
     const handleLoginPopOpen = (e)=>{
@@ -76,6 +82,15 @@ const MainLayout = ({children, title}) => {
             main: colors.secondary
         }
     })
+
+    // logout handler
+    const logoutHandler = ()=>{
+        dispatch({type:'LOGOUT_USER'});
+        router.push('/');
+        enqueueSnackbar('Logged out successfully',
+        {variant:'success'});
+        handleClosePop();
+    }
     return (
         <div>
             <Head>
@@ -100,14 +115,22 @@ const MainLayout = ({children, title}) => {
                             <CgDarkMode/>
                         </Button>
 
-                            <Avatar style={{cursor:'pointer'}} onClick={handleLoginPopOpen}>R</Avatar>
+                            <Avatar style={{cursor:'pointer'}} 
+                                onClick={handleLoginPopOpen}
+                                src={userInfo ? userInfo.imageUrl : ''}>
+                            </Avatar>
                             <Dialog
                                 open={loginPop}
                                 onClose={handleClosePop}>
                                 <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center' className={classes.loginBox}>
-                                    <Typography>Sign in to your account!</Typography>
+                                    <Typography>{userInfo ? userInfo.name: 'Sign in to your account!'}</Typography>
                                     <Container className={classes.loginContainer}>
-                                        <NextLink href='/login' passHref>
+                                        {userInfo ? 
+                                        <Button onClick={logoutHandler} variant='contained' className={classes.loginBtn}>
+                                            Logout
+                                        </Button>
+                                        :
+                                        <><NextLink href='/login' passHref>
                                             <Link>
                                                 <Button variant='contained' className={classes.loginBtn}>
                                                     Login
@@ -120,7 +143,7 @@ const MainLayout = ({children, title}) => {
                                                     Register
                                                 </Button>
                                             </Link>
-                                        </NextLink>
+                                        </NextLink></>}
                                     </Container>
                                 </Box>
                             </Dialog>
