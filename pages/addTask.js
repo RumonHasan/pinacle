@@ -30,12 +30,18 @@ import {TaskContext} from '../utils/taskManager';
             [name]: value
         })
     }
+    console.log(userInfo);
     // adding task handler
     const handleAddTask = async (e)=>{
        e.preventDefault();
        try{
-        const {data} = await axios.post('/api/task/add', {userToken:userInfo.userToken,title: taskForm.title, 
-        details: taskForm.details, completed: taskForm.completed, comment:[]}); // passing the data to the add handler
+        const {data} = await axios.post('/api/task/add', {title: taskForm.title, 
+        details: taskForm.details, completed: taskForm.completed, comment:[]},
+        {
+            headers: {
+                authorization: `Bearer ${userInfo.userToken}`
+            }
+        }); // passing the data to the add handler
         enqueueSnackbar(
             'Task Has Been Added',
             {variant:'success'},

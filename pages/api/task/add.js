@@ -1,17 +1,17 @@
 import nextConnect from 'next-connect';
 import database from '../../../utils/database';
 import Task from '../../../models/TaskModel';
+import { isAuth } from '../../../utils/auth';
 
 const handler = nextConnect();
+
+handler.use(isAuth);
 
 handler.post(async(req,res)=>{
     await database.connect();
     const newTask = new Task({
-        userToken: req.body.userToken,
-        title: req.body.title,
-        details: req.body.details,
-        completed: req.body.completed,
-        comment: req.body.comment,
+        ...req.body,
+        user: req.user._id
     })
     const tasks = await newTask.save();
     await database.disconnect();
