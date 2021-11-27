@@ -11,6 +11,7 @@ import GoogleLogin from 'react-google-login';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import axios from 'axios';
+import mongoose from 'mongoose';
 
 const Login = () => {
     const {state,dispatch} = useContext(TaskContext);
@@ -29,7 +30,7 @@ const Login = () => {
     // jumping back to home
     useEffect(()=>{
         if(userInfo){
-            router.push('/')
+            router.push('/allTasks')
         }
     },[router, userInfo])
 
@@ -40,7 +41,7 @@ const Login = () => {
             const {data} = await axios.post('/api/user/login', {email, password});
             dispatch({type: 'ADD_USER_INFO_CUSTOM', payload:data});
             Cookies.set('userInfo', data);
-            router.push('/');
+            router.push(`/${data._id}`);
             enqueueSnackbar('Login Succesful',
             {variant:'success'});
         }catch(err){

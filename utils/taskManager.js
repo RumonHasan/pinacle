@@ -6,7 +6,7 @@ export const TaskContext = createContext();
 const initialStates = {
     darkMode: Cookies.get('darkMode')=== 'ON'? true: false,
     searchValue: '',
-    taskLength: {},
+    taskLength: null,
     delete:{
         deleteBox: false,
         deleteId: '',
@@ -14,9 +14,7 @@ const initialStates = {
     },
     comment:'',
     // user info
-    userInfo: Cookies.get('userInfo') ?
-    JSON.parse(JSON.stringify(Cookies.get('userInfo'))) :
-    null,
+    userInfo: null,
 
     userToken: '',
 }
@@ -96,6 +94,7 @@ const reducer = (state, action)=>{
                 ...state,
                 userInfo: null,
                 userToken: '',
+                taskLength: '',
             }
         
         // default 

@@ -46,7 +46,7 @@ import {TaskContext} from '../utils/taskManager';
             'Task Has Been Added',
             {variant:'success'},
         )
-       router.push('/');
+       router.push('/allTasks');
        }catch(err){
             enqueueSnackbar(
                 err.message,{variant:'error'}

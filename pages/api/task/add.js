@@ -5,7 +5,7 @@ import { isAuth } from '../../../utils/auth';
 
 const handler = nextConnect();
 
-handler.use(isAuth);
+handler.use(isAuth); // using it to confirm the user token
 
 handler.post(async(req,res)=>{
     await database.connect();

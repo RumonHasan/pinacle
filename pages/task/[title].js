@@ -77,7 +77,7 @@ const TaskScreen = (props) => {
                 enqueueSnackbar('Task has been deleted',
                     {variant:'success'}
                 );
-                router.push('/');
+                router.push('/allTasks');
             }catch(err){
                 enqueueSnackbar(
                     'Unable to delete task',
@@ -197,7 +197,7 @@ export const getServerSideProps = async(context)=>{
     await database.disconnect();
     return{// individual task returned
         props:{
-            task:database.convertDocToObj(task),
+            task:JSON.parse(JSON.stringify(task)),
             comments:task.comment?.map(database.convertDocToObj)
         }
     }

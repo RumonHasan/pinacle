@@ -118,7 +118,8 @@ const styleObjects = ()=>{
             paddingTop:theme.spacing(2.5),
             fontSize:'xx-large',
             fontWeight:'bold',
-            color: colors.titleMain
+            color: colors.titleMain,
+            borderBottom: `5px solid ${colors.secondary}`,
         },
         tasksGrid:{
             overflowY:'auto',

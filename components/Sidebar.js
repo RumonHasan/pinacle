@@ -35,7 +35,7 @@ const Sidebar = () => {
     // handle search
     const handleSearch = (e)=>{
         dispatch({type:'UPDATE_SEARCH_VALUE', payload:e.target.value});
-        router.push('/');
+        router.push('/allTasks');
     }
 
     return (
@@ -52,7 +52,7 @@ const Sidebar = () => {
                     <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>
                             <IoMdCreate style={{fontSize:'large', position:'absolute', left:10}}/>
-                            <NextLink href='/createTask' passHref>
+                            <NextLink href='/' passHref>
                                 <Link>
                                     <Typography>Create</Typography>
                                 </Link>
@@ -63,7 +63,7 @@ const Sidebar = () => {
                     <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>
                             <FaHome className={classes.listIcon}/>
-                            <NextLink href='/' passHref>
+                            <NextLink href='/allTasks' passHref>
                                 <Link>
                                     <Typography>All Tasks</Typography>
                                 </Link>

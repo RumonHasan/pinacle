@@ -90,7 +90,7 @@ const MainLayout = ({children, title}) => {
     // logout handler
     const logoutHandler = ()=>{
         dispatch({type:'LOGOUT_USER'});
-        router.push('/');
+        router.push('/allTasks');
         Cookies.remove('userInfo');
         enqueueSnackbar('Logged out successfully',
         {variant:'success'});
