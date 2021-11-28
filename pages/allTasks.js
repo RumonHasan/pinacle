@@ -17,17 +17,18 @@ import { Container,
     import { TaskContext } from '../utils/taskManager';
     import axios from 'axios';
     import { useSnackbar } from 'notistack';
-    import mongoose from 'mongoose';
+    import Cookies from 'js-cookie';
     
     const AllTasks = (props) => {
         const {state, dispatch} = useContext(TaskContext)
-        const {tasks} = props;
+        const {tasks, error} = props;
         const [taskItems, setTaskItems] = useState(tasks ? tasks : []); // task state for client side
         const {searchValue,delete:{deleteBox, deleteId, deleteTitle}, userInfo} = state;
         const {useAllTaskStyles} = styleObjects();
         const classes = useAllTaskStyles();
         const router = useRouter();
         const {enqueueSnackbar} = useSnackbar();
+        // error if no items have been found
     
           // refreshing data
           const refreshData = ()=>{
@@ -157,19 +158,24 @@ import { Container,
     export default AllTasks;
     
     // serverside task render;
-    export const getServerSideProps = async (context)=> {
-        const {params} = context;
-        const userId = mongoose.Types.ObjectId(params.allTasks);
-        await database.connect();
-        const tasks = await Task.find({user:userId}).lean();
-        await database.disconnect();
-        // conversion of comments to json objects is necessary
-        return{
-            props:{
-                tasks: tasks.map(task=> JSON.parse(JSON.stringify(task))),
-                comments: tasks.map(taskItem => 
-                    taskItem.comment.map(commentItem=>
-                        database.convertDocToObj(commentItem)))
+    export const getServerSideProps = async ()=> {
+        try{
+            await database.connect();
+            const tasks = await Task.find({user:user._id}).lean();
+            await database.disconnect();
+            return{
+                props:{
+                    tasks: tasks?.map(task=> JSON.parse(JSON.stringify(task))),
+                    comments: tasks?.map(taskItem => 
+                        taskItem.comment.map(commentItem=>
+                            database.convertDocToObj(commentItem)))
+                }
+            }
+        }catch(err){
+            return{
+                props:{
+                    error: err.message
+                }
             }
         }
     }

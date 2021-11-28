@@ -14,7 +14,8 @@ const initialStates = {
     },
     comment:'',
     // user info
-    userInfo: null,
+    userInfo: Cookies.get('userInfo')?
+    JSON.parse(Cookies.get('userInfo')): {},
 
     userToken: '',
 }
