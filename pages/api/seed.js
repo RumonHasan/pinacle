@@ -8,8 +8,6 @@ const handler = nc(); // next connect middleware handler
 
 handler.get(async(req,res)=>{
     await database.connect();
-    await Task.deleteMany();
-    await Task.insertMany(taskData.tasks);
     await User.deleteMany();
     await User.insertMany(taskData.dummyUsers);
     await database.disconnect();

@@ -41,7 +41,7 @@ const Login = () => {
             const {data} = await axios.post('/api/user/login', {email, password});
             dispatch({type: 'ADD_USER_INFO_CUSTOM', payload:data});
             Cookies.set('userInfo', data);
-            router.push(`/allTasks`);
+            router.push(`/${data._id}`);
             enqueueSnackbar('Login Succesful',
             {variant:'success'});
         }catch(err){

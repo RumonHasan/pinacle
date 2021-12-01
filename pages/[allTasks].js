@@ -8,8 +8,6 @@ import { Container,
     import { useRouter } from 'next/dist/client/router';
     import React,{useContext, useEffect, useState} from 'react'
     import MainLayout from '../components/MainLayout';
-    import Task from '../models/TaskModel';
-    import database from '../utils/database';
     import styleObjects from '../utils/styles';
     import NextLink from 'next/link';
     import {BiDetail} from 'react-icons/bi';
@@ -17,12 +15,13 @@ import { Container,
     import { TaskContext } from '../utils/taskManager';
     import axios from 'axios';
     import { useSnackbar } from 'notistack';
-    import Cookies from 'js-cookie';
+    import dynamic from 'next/dynamic';
     
     const AllTasks = (props) => {
+        const {params} = props;
+        const userId = params.allTasks; // userId from login page
         const {state, dispatch} = useContext(TaskContext)
-        const {tasks, error} = props;
-        const [taskItems, setTaskItems] = useState(tasks ? tasks : []); // task state for client side
+        const [taskItems, setTaskItems] = useState(); // task state for client side
         const {searchValue,delete:{deleteBox, deleteId, deleteTitle}, userInfo} = state;
         const {useAllTaskStyles} = styleObjects();
         const classes = useAllTaskStyles();
@@ -34,27 +33,34 @@ import { Container,
           const refreshData = ()=>{
             router.replace(router.asPath);
         }
+
+        console.log(userId);
     
         // search function
-        useEffect(()=>{
-            const fetchSearchTask = ()=>{
-                if(searchValue){
-                    const filterTasks = taskItems.filter((task)=>
-                    task.title.toLowerCase().includes(searchValue));
-                    setTaskItems(filterTasks);
-                }else{
-                    setTaskItems(tasks);
-                }
-            }
-            fetchSearchTask();
-        },[searchValue])
+        // useEffect(()=>{
+        //     const fetchSearchTask = ()=>{
+        //         if(searchValue){
+        //             const filterTasks = taskItems.filter((task)=>
+        //             task.title.toLowerCase().includes(searchValue));
+        //             setTaskItems(filterTasks);
+        //         }else{
+        //             setTaskItems(tasks);
+        //         }
+        //     }
+        //     fetchSearchTask();
+        // },[searchValue]);
+
     
         // passing task length
-        useEffect(()=>{
-            dispatch({type:'TOTAL_TASKS', payload: tasks.length})
-        },[dispatch, tasks]);
+        // useEffect(()=>{
+        //     dispatch({type:'TOTAL_TASKS', payload: tasks.length})
+        // },[dispatch, tasks]);
+
+        // fetching the tasks 
     
+
         // delete
+
         const deleteTaskHandler = (id, title)=>{
             dispatch({type:'OPEN_DELETE_BOX', payload:{id, title}})
         }
@@ -155,28 +161,14 @@ import { Container,
             </MainLayout>
         )
     }
-    export default AllTasks;
-    
-    // serverside task render;
-    export const getServerSideProps = async ()=> {
-        try{
-            await database.connect();
-            const tasks = await Task.find({user:user._id}).lean();
-            await database.disconnect();
-            return{
-                props:{
-                    tasks: tasks?.map(task=> JSON.parse(JSON.stringify(task))),
-                    comments: tasks?.map(taskItem => 
-                        taskItem.comment.map(commentItem=>
-                            database.convertDocToObj(commentItem)))
-                }
-            }
-        }catch(err){
-            return{
-                props:{
-                    error: err.message
-                }
-            }
+// returning the params
+ export const getServerSideProps = async({params})=>{
+    return{
+        props:{
+            params
         }
     }
+ }
+
+ export default dynamic(()=> Promise.resolve(AllTasks), {ssr:false});
     

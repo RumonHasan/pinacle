@@ -60,7 +60,8 @@ const Sidebar = () => {
                         </Container>
                     </ListItem>
 
-                    <ListItem className={classes.menuListItem}>
+                    {userInfo &&
+                        <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>
                             <FaHome className={classes.listIcon}/>
                             <NextLink href='/allTasks' passHref>
@@ -71,6 +72,8 @@ const Sidebar = () => {
                         </Container>
                         <Badge badgeContent={taskLength}></Badge>
                     </ListItem>
+                    }
+       
 
                     <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>

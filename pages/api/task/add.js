@@ -11,7 +11,7 @@ handler.post(async(req,res)=>{
     await database.connect();
     const newTask = new Task({
         ...req.body,
-        user: req.user._id
+        email: req.user._id
     })
     const tasks = await newTask.save();
     await database.disconnect();
