@@ -223,6 +223,30 @@ const styleObjects = ()=>{
             maxWidth: '500px',
 
         }
+    }));
+
+    const useCreateStyles = makeStyles(theme=>({
+        createBox:{
+            width: '100%',
+        },
+        createGrid:{
+
+        }
+    }));
+
+    const useRegisterStyles = makeStyles(theme=>({
+        formBox:{
+            height: '100vh',
+            alignItems:'center',
+        },
+        form:{
+            border: `2px solid gray`,
+            padding:theme.spacing(4),
+            borderRadius: 10,
+            width: '450px',
+            maxWidth: '500px',
+
+        }
     }))
 
     return{
@@ -232,6 +256,8 @@ const styleObjects = ()=>{
         useAddTaskStyles,
         useTaskStyles,
         useLoginStyles,
+        useCreateStyles,
+        useRegisterStyles,
     }
 }
 

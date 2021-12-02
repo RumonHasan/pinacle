@@ -34,21 +34,22 @@ import { Container,
 
         // fetching the data
         useEffect(()=>{
-            if(!userInfo){
-                router.push('/login');
-            };
-            // api call
-            const fetchTasks = async ()=>{
-                try{//rumonmaria
-                    const {data} = await axios.post('/api/task/userTasks', {userId:userInfo._id});
-                    setTaskItems(data);
-                    //task length
-                    dispatch({type:'TOTAL_TASKS', payload: data.length});
-                }catch(err){
-                    enqueueSnackbar('Tasks have not been fetched',{variant:'error'})
-                }
-            };
-            fetchTasks();
+            if(userInfo){
+                const fetchTasks = async ()=>{
+                    try{
+                        const {data} = await axios.post('/api/task/userTasks', {userId:userInfo._id});
+                        setTaskItems(data);
+                        dispatch({type:'TOTAL_TASKS', payload: data.length});
+                    }catch(err){
+                        enqueueSnackbar('Tasks have not been fetched',{variant:'error'})
+                    }
+                };
+                fetchTasks();
+            }else{
+                enqueueSnackbar('Login to load your tasks',
+                {variant:'error'})
+            }
+
         },[])
     
         // search function

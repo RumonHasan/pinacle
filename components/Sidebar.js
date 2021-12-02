@@ -60,7 +60,6 @@ const Sidebar = () => {
                         </Container>
                     </ListItem>
 
-                    {userInfo &&
                         <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>
                             <FaHome className={classes.listIcon}/>
@@ -72,7 +71,7 @@ const Sidebar = () => {
                         </Container>
                         <Badge badgeContent={taskLength}></Badge>
                     </ListItem>
-                    }
+                    
        
 
                     <ListItem className={classes.menuListItem}>
