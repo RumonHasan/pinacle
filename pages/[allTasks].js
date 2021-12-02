@@ -16,48 +16,56 @@ import { Container,
     import axios from 'axios';
     import { useSnackbar } from 'notistack';
     import dynamic from 'next/dynamic';
+    import Cookies from 'js-cookie';
     
-    const AllTasks = (props) => {
-        const {params} = props;
-        const userId = params.allTasks; // userId from login page
+    const AllTasks = () => {
         const {state, dispatch} = useContext(TaskContext)
-        const [taskItems, setTaskItems] = useState(); // task state for client side
+        const [taskItems, setTaskItems] = useState([]); // task state for client side
         const {searchValue,delete:{deleteBox, deleteId, deleteTitle}, userInfo} = state;
-        const {useAllTaskStyles} = styleObjects();
+        const {useAllTaskStyles} = styleObjects();//i love u
         const classes = useAllTaskStyles();
         const router = useRouter();
         const {enqueueSnackbar} = useSnackbar();
-        // error if no items have been found
-    
-          // refreshing data
-          const refreshData = ()=>{
+        const [isLoading, setLoading] = useState(false);
+        // data refresh
+        const refreshData = ()=>{//paku
             router.replace(router.asPath);
         }
 
-        console.log(userId);
+        // fetching the data
+        useEffect(()=>{
+            if(!userInfo){
+                router.push('/login');
+            };
+            // api call
+            const fetchTasks = async ()=>{
+                try{//rumonmaria
+                    const {data} = await axios.post('/api/task/userTasks', {userId:userInfo._id});
+                    setTaskItems(data);
+                    //task length
+                    dispatch({type:'TOTAL_TASKS', payload: data.length});
+                }catch(err){
+                    enqueueSnackbar('Tasks have not been fetched',{variant:'error'})
+                }
+            };
+            fetchTasks();
+        },[])
     
         // search function
-        // useEffect(()=>{
-        //     const fetchSearchTask = ()=>{
-        //         if(searchValue){
-        //             const filterTasks = taskItems.filter((task)=>
-        //             task.title.toLowerCase().includes(searchValue));
-        //             setTaskItems(filterTasks);
-        //         }else{
-        //             setTaskItems(tasks);
-        //         }
-        //     }
-        //     fetchSearchTask();
-        // },[searchValue]);
+        
+        useEffect(()=>{
+            const fetchSearchTask = ()=>{
+                if(searchValue){
+                    const filterTasks = initialItems.filter((task)=>
+                    task.title.toLowerCase().includes(searchValue));
+                    setTaskItems(filterTasks);
+                }else{
+                   
+                }
+            }
+            fetchSearchTask();
+        },[searchValue]);
 
-    
-        // passing task length
-        // useEffect(()=>{
-        //     dispatch({type:'TOTAL_TASKS', payload: tasks.length})
-        // },[dispatch, tasks]);
-
-        // fetching the tasks 
-    
 
         // delete
 
@@ -161,14 +169,6 @@ import { Container,
             </MainLayout>
         )
     }
-// returning the params
- export const getServerSideProps = async({params})=>{
-    return{
-        props:{
-            params
-        }
-    }
- }
 
  export default dynamic(()=> Promise.resolve(AllTasks), {ssr:false});
     
