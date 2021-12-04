@@ -148,7 +148,9 @@ const styleObjects = ()=>{
             marginLeft:theme.spacing(1),
         },
         taskBtn:{
-            display:'flex'
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
 
         },
         taskTimestamp:{

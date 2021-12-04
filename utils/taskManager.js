@@ -12,6 +12,11 @@ const initialStates = {
         deleteId: '',
         deleteTitle: '',
     },
+    edit:{
+        editValue:'',
+        editState: false,
+        editId: '',
+    },
     comment:'',
     // user info
     userInfo: Cookies.get('userInfo')?
@@ -32,6 +37,24 @@ const reducer = (state, action)=>{
                 ...state,
                 darkMode:true
             }
+        // task edits
+        case 'EDIT_ON':
+            return {
+                ...state,
+                edit:{
+                    ...state.edit,
+                    editState:true,
+                }
+            }
+            case 'EDIT_OFF':
+                return {
+                    ...state,
+                    edit:{
+                        ...state.edit,
+                        editState:false,
+                    }
+                }
+        
         // search value
         case 'UPDATE_SEARCH_VALUE':
             return{

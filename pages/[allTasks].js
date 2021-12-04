@@ -4,14 +4,25 @@ import { Container,
     FormControl, 
     FormControlLabel, 
     FormLabel, 
-    RadioGroup,Radio, Link, IconButton, Icon, Box, Dialog, DialogTitle, Divider, DialogActions, Button, DialogContent } from '@material-ui/core';
+    RadioGroup,
+    Radio, 
+    Link, 
+    IconButton, 
+    Icon, 
+    Box, 
+    Dialog, 
+    DialogTitle, 
+    Divider, 
+    DialogActions, 
+    Button, 
+    DialogContent, LinearProgress, TextField } from '@material-ui/core';
     import { useRouter } from 'next/dist/client/router';
     import React,{useContext, useEffect, useState} from 'react'
     import MainLayout from '../components/MainLayout';
     import styleObjects from '../utils/styles';
     import NextLink from 'next/link';
     import {BiDetail} from 'react-icons/bi';
-    import { FaTrash } from 'react-icons/fa';
+    import { FaTrash, FaEdit } from 'react-icons/fa';
     import { TaskContext } from '../utils/taskManager';
     import axios from 'axios';
     import { useSnackbar } from 'notistack';
@@ -21,7 +32,7 @@ import { Container,
     const AllTasks = () => {
         const {state, dispatch} = useContext(TaskContext)
         const [taskItems, setTaskItems] = useState([]); // task state for client side
-        const {searchValue,delete:{deleteBox, deleteId, deleteTitle}, userInfo} = state;
+        const {searchValue,delete:{deleteBox, deleteId, deleteTitle}, userInfo, edit:{editState, editId, editValue}} = state;
         const {useAllTaskStyles} = styleObjects();//i love u
         const classes = useAllTaskStyles();
         const router = useRouter();
@@ -34,12 +45,15 @@ import { Container,
 
         // fetching the data
         useEffect(()=>{
+            setLoading(true);
             if(userInfo){
                 const fetchTasks = async ()=>{
                     try{
                         const {data} = await axios.post('/api/task/userTasks', {userId:userInfo._id});
                         setTaskItems(data);
+                        Cookies.set('userTasks', data);
                         dispatch({type:'TOTAL_TASKS', payload: data.length});
+                        setLoading(false);
                     }catch(err){
                         enqueueSnackbar('Tasks have not been fetched',{variant:'error'})
                     }
@@ -53,15 +67,16 @@ import { Container,
         },[])
     
         // search function
-        
+        const userTasks = Cookies.get('userTasks') ?
+        JSON.parse(Cookies.get('userTasks')): [];
         useEffect(()=>{
             const fetchSearchTask = ()=>{
                 if(searchValue){
-                    const filterTasks = initialItems.filter((task)=>
+                    const filterTasks = taskItems.filter((task)=>
                     task.title.toLowerCase().includes(searchValue));
                     setTaskItems(filterTasks);
                 }else{
-                   
+                   setTaskItems(userTasks);
                 }
             }
             fetchSearchTask();
@@ -102,6 +117,17 @@ import { Container,
                 )
             }
         }
+
+        // task edit handler
+        const editIdHandler = (editId) => {
+            const existTask = taskItems.map((task)=> task._id === editId);
+            if(existTask){
+                dispatch({type:'EDIT_ON'});
+            }
+        }
+        const titleEditHandler = (editValue)=>{
+
+        }
         
         return (
             <MainLayout>
@@ -120,33 +146,53 @@ import { Container,
                         <Button variant='contained' onClick={deleteTask}>Delete</Button>
                     </DialogActions>
                 </Dialog>
-                <Container className={classes.container}>
+                {isLoading ? <LinearProgress/> :
+                    <Container className={classes.container}>
                         <Typography className={classes.title}>All Tasks</Typography>
                         <Grid container alignItems='center' className={classes.tasksGrid}>
                         {userInfo ? taskItems?.map((task, index)=>{
                             return (
                                 <Grid item xs={12} key={index} className={classes.taskBlock}>
-                                        <Container className={classes.taskContainer}>
-                                            <FormControl component='fieldset'>
-                                                <RadioGroup
-                                                aria-label={task.title}
-                                                defaultValue=''
-                                                name={task.title}>
-                                                    <FormControlLabel className={classes.taskTitle} 
-                                                    value={task.title} 
-                                                    control={<Radio/>} 
-                                                    label={task.title}/>
-                                                </RadioGroup>
-                                            </FormControl>
+                                        <Container className={classes.taskContainer}>   
+                                                <Box display='flex'>           
+                                                    {editState ? <><TextField
+                                                        id='editValue'
+                                                        variant='outlined'
+                                                        label={task.title}
+                                                        onChange={titleEditHandler}
+                                                        value={editValue}
+                                                    />
+                                                    <Button variant='contained' onClick={()=>dispatch({type:'EDIT_OFF'})}>
+                                                        <FaEdit/>
+                                                    </Button>
+                                                    </>
+                                                    :
+                                                    <Box onClick={()=>editIdHandler(task._id)}>
+                                                        <FormControl component='fieldset'> 
+                                                            <RadioGroup
+                                                            aria-label={task.title}
+                                                            defaultValue=''
+                                                            name={task.title}>
+                                                                <FormControlLabel className={classes.taskTitle} 
+                                                                    value={task.title} 
+                                                                    control={<Radio/>} 
+                                                                    label={task.title} 
+                                                                    />
+                                                            </RadioGroup>
+                                                        </FormControl>
+                                                    </Box>
+                                                    }
+                                                </Box>
+                                                 
                                             <Typography className={classes.taskTimestamp}>
                                                 {task.createdAt.toString()}
                                             </Typography>
                                             <Box className={classes.taskBtn}>
                                                 <NextLink href={`/task/${task.title}`} passHref>
                                                     <Link>
-                                                        <IconButton>
-                                                            <BiDetail/>
-                                                        </IconButton>
+                                                        <Box display='flex'>
+                                                            <Typography>View Details</Typography>
+                                                        </Box>
                                                     </Link>
                                                 </NextLink>
                                                 <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
@@ -167,6 +213,8 @@ import { Container,
                         </Grid>
                         <Typography className={classes.title}>Completed</Typography>
                 </Container>
+                }
+                
             </MainLayout>
         )
     }
