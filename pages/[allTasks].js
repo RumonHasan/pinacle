@@ -28,16 +28,21 @@ import { Container,
     import { useSnackbar } from 'notistack';
     import dynamic from 'next/dynamic';
     import Cookies from 'js-cookie';
+import Tasks from '../utils/Tasks';
     
     const AllTasks = () => {
         const {state, dispatch} = useContext(TaskContext)
         const [taskItems, setTaskItems] = useState([]); // task state for client side
-        const {searchValue,delete:{deleteBox, deleteId, deleteTitle}, userInfo, edit:{editState, editId, editValue}} = state;
+        const {searchValue,delete:{deleteBox, deleteId, deleteTitle}, userInfo} = state;
         const {useAllTaskStyles} = styleObjects();//i love u
         const classes = useAllTaskStyles();
         const router = useRouter();
         const {enqueueSnackbar} = useSnackbar();
         const [isLoading, setLoading] = useState(false);
+        // edit states
+        const [isEditing, setIsEditing] = useState(false);
+        const [editId, setEditId] = useState('');
+        const [editValue, setEditValue] = useState('');
         // data refresh
         const refreshData = ()=>{//paku
             router.replace(router.asPath);
@@ -119,6 +124,15 @@ import { Container,
         }
 
         // task edit handler
+        const editStateController = (editId)=>{
+            taskItems.find((task)=>{
+                if(task._id === editId){
+                    setIsEditing(true);
+                    setEditId(editId);
+                }
+            })
+        }
+
         const editIdHandler = async (editId) => {
             const existTask = taskItems.map((task)=> task._id === editId);
             try{
@@ -130,10 +144,7 @@ import { Container,
                 console.log(err);
             }
         }
-        const titleEditHandler = (e)=>{
-            dispatch({type:'ADD_EDIT_VALUE', payload: e.target.value})
-        }
-        console.log(editValue);
+        
         
         return (
             <MainLayout>
@@ -156,59 +167,11 @@ import { Container,
                     <Container className={classes.container}>
                         <Typography className={classes.title}>All Tasks</Typography>
                         <Grid container alignItems='center' className={classes.tasksGrid}>
-                        {userInfo ? taskItems?.map((task, index)=>{
-                            return (
-                                <Grid item xs={12} key={index} className={classes.taskBlock}>
-                                        <Container className={classes.taskContainer}>   
-                                                <Box display='flex'>           
-                                                    {task.isEditable ? <><TextField
-                                                        id='editValue'
-                                                        variant='outlined'
-                                                        label={task.title}
-                                                        onChange={titleEditHandler}
-                                                        value={editValue}
-                                                    />
-                                                    <Button variant='contained' onClick={()=>dispatch({type:'EDIT_OFF'})}>
-                                                        <FaEdit/>
-                                                    </Button>
-                                                    </>
-                                                    :
-                                                    <Box onClick={()=>editIdHandler(task._id)}>
-                                                        <FormControl component='fieldset'> 
-                                                            <RadioGroup
-                                                            aria-label={task.title}
-                                                            defaultValue=''
-                                                            name={task.title}>
-                                                                <FormControlLabel className={classes.taskTitle} 
-                                                                    value={task.title} 
-                                                                    control={<Radio/>} 
-                                                                    label={task.title} 
-                                                                    />
-                                                            </RadioGroup>
-                                                        </FormControl>
-                                                    </Box>
-                                                    }
-                                                </Box>
-                                                 
-                                            <Typography className={classes.taskTimestamp}>
-                                                {task.createdAt.toString()}
-                                            </Typography>
-                                            <Box className={classes.taskBtn}>
-                                                <NextLink href={`/task/${task.title}`} passHref>
-                                                    <Link>
-                                                        <Box display='flex'>
-                                                            <Typography>View Details</Typography>
-                                                        </Box>
-                                                    </Link>
-                                                </NextLink>
-                                                <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
-                                                    <FaTrash/>
-                                                </IconButton>
-                                            </Box>
-                                        </Container>
-                                </Grid>
-                            )
-                        }) :
+                        {userInfo ? <Tasks
+                            editStateController={editStateController}
+                            taskItems={taskItems}
+                            deleteTaskHandler={deleteTaskHandler}
+                        /> :
                         <NextLink href='/login' passHref>
                             <Link>
                                 <Typography variant='h6' style={{opacity:0.7, color: 'white'}}>
