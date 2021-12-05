@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { FaLessThanEqual } from 'react-icons/fa';
 
 const commentSchema = new mongoose.Schema({
     comment: {type:String, required: true}

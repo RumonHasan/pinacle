@@ -119,15 +119,21 @@ import { Container,
         }
 
         // task edit handler
-        const editIdHandler = (editId) => {
+        const editIdHandler = async (editId) => {
             const existTask = taskItems.map((task)=> task._id === editId);
-            if(existTask){
-                dispatch({type:'EDIT_ON'});
+            try{
+                if(existTask){
+                    const {data} = await axios.post(`/api/task/${editId}/update`);
+                    refreshData();
+                }
+            }catch(err){
+                console.log(err);
             }
         }
-        const titleEditHandler = (editValue)=>{
-
+        const titleEditHandler = (e)=>{
+            dispatch({type:'ADD_EDIT_VALUE', payload: e.target.value})
         }
+        console.log(editValue);
         
         return (
             <MainLayout>
@@ -155,7 +161,7 @@ import { Container,
                                 <Grid item xs={12} key={index} className={classes.taskBlock}>
                                         <Container className={classes.taskContainer}>   
                                                 <Box display='flex'>           
-                                                    {editState ? <><TextField
+                                                    {task.isEditable ? <><TextField
                                                         id='editValue'
                                                         variant='outlined'
                                                         label={task.title}

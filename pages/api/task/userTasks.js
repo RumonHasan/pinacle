@@ -9,7 +9,7 @@ userTaskHandler.post(async(req, res)=>{
         await database.connect();
         const tasks = await Task.find({user: req.body.userId})
         await database.disconnect();
-        res.send(tasks)
+        res.send(tasks);
     }catch(err){
         res.send({message:'Tasks not found'})
     }

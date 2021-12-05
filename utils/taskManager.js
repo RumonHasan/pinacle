@@ -38,6 +38,14 @@ const reducer = (state, action)=>{
                 darkMode:true
             }
         // task edits
+        case 'ADD_EDIT_VALUE':
+            return{
+                ...state,
+                edit:{
+                    ...state.edit,
+                    editValue: action.payload
+                }
+            }
         case 'EDIT_ON':
             return {
                 ...state,
