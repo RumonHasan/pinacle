@@ -124,24 +124,25 @@ import Tasks from '../utils/Tasks';
         }
 
         // task edit handler
-        const editStateController = (editId)=>{
+        const editStateController = (editId, title)=>{
             taskItems.find((task)=>{
                 if(task._id === editId){
                     setIsEditing(true);
                     setEditId(editId);
+                    setEditValue(title);
                 }
             })
         }
 
-        const editIdHandler = async (editId) => {
-            const existTask = taskItems.map((task)=> task._id === editId);
+        const editHandler = async () => {
             try{
-                if(existTask){
-                    const {data} = await axios.post(`/api/task/${editId}/update`);
-                    refreshData();
-                }
+                const {data} = await axios.post(`/api/task/${editId}/update`, {newValue: editValue});
+                refreshData();
+                setIsEditing(false); // closing edit field
+                enqueueSnackbar('Item has been updated', {variant:'success'})
             }catch(err){
-                console.log(err);
+               enqueueSnackbar('Unable to edit title', 
+               {variant:'error'})
             }
         }
         
@@ -166,6 +167,18 @@ import Tasks from '../utils/Tasks';
                 {isLoading ? <LinearProgress/> :
                     <Container className={classes.container}>
                         <Typography className={classes.title}>All Tasks</Typography>
+                        {isEditing &&
+                        <Box style={{padding:'10px'}} display='flex'>
+                            <TextField
+                                variant='outlined'
+                                value={editValue}
+                                onChange={(e)=>setEditValue(e.target.value)}
+                                label='Enter the new title'
+                            />
+                            <Button variant='contained' onClick={editHandler} style={{marginLeft:'10px'}}>Edit</Button>
+                        </Box>
+                        }
+                       
                         <Grid container alignItems='center' className={classes.tasksGrid}>
                         {userInfo ? <Tasks
                             editStateController={editStateController}

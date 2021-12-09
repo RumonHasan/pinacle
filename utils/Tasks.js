@@ -25,7 +25,7 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler}) => {
                         <Grid item xs={12} key={index} className={classes.taskBlock}>
                                 <Container className={classes.taskContainer}>   
                                         <Box display='flex'>           
-                                            <Box onClick={()=>editStateController(task._id)}>
+                                            <Box onClick={()=>editStateController(task._id, task.title)}>
                                                 <FormControl component='fieldset'> 
                                                     <RadioGroup
                                                     aria-label={task.title}

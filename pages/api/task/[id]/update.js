@@ -6,13 +6,10 @@ const updateHandler = nextConnect();
 
 updateHandler.post(async(req,res)=>{
     await database.connect();
-    console.log(req.query.id);
-    const allTasks = await Task.find({});
-    const tasksNotEdit = allTasks.filter((task)=> task._id !== req.body.id);
     const task = await Task.findById(req.query.id);
     if(task){
         await task.updateOne({
-            isEditable: true
+            title: req.body.newValue
         });
         const updatedTask = await task.save();
         await database.disconnect();
