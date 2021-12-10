@@ -138,12 +138,24 @@ import Tasks from '../utils/Tasks';
             try{
                 const {data} = await axios.post(`/api/task/${editId}/update`, {newValue: editValue});
                 refreshData();
+                clientTaskUpdate(); // updating the data on the client side 
                 setIsEditing(false); // closing edit field
                 enqueueSnackbar('Item has been updated', {variant:'success'})
             }catch(err){
                enqueueSnackbar('Unable to edit title', 
                {variant:'error'})
             }
+        }
+
+        const clientTaskUpdate = ()=>{
+            setTaskItems(prevTasks => {
+                const existTask = prevTasks.find(task => task._id === editId);
+                if(existTask){
+                    return prevTasks.map(task =>
+                        task._id === editId ? {...task, title: editValue} : task)
+                };
+            }
+        )
         }
         
         
