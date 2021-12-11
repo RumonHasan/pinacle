@@ -159,7 +159,7 @@ const styleObjects = ()=>{
             padding:theme.spacing(0.5),
             fontSize: 'x-small',
             opacity: 0.5
-        }
+        },
     }));
 
     const useAddTaskStyles = makeStyles(theme=>({
@@ -174,10 +174,12 @@ const styleObjects = ()=>{
             display: 'flex',
             justifyContent:'center',
             width: '100%',
+            maxHeight: '100vh',
         },
         taskCard:{
             width: '800px',
            margin: theme.spacing(2),
+           overflowY: 'auto',
         },
         cardHeader:{
             fontSize: 'large',
@@ -209,6 +211,26 @@ const styleObjects = ()=>{
             fontSize:'small',
             color:'gray',
             opacity: 0.95
+        },
+        // attachment styles
+            attachmentGallery:{
+            display: 'flex',
+            maxWidth: '700px',
+            overflowX: 'auto',
+        },
+        imageItem:{
+            border:`1px solid ${colors.mainWhite}`,
+            opacity: 0.6,
+            borderRadius: 30,
+            marginRight:theme.spacing(2),
+            cursor: 'pointer',
+            '&:hover':{
+                opacity: 1,
+                transition: '450ms',
+            }
+        },
+        imageBox:{
+            padding:theme.spacing(1),
         }
     }));
 

@@ -15,10 +15,11 @@ DialogActions,
 DialogContent,
 DialogTitle,
 Badge, 
-LinearProgress} from '@material-ui/core';
+LinearProgress,
+Input,} from '@material-ui/core';
 import  TextField  from '@material-ui/core/TextField';
 import { useSnackbar } from 'notistack';
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import MainLayout from '../../components/MainLayout';
 import Task from '../../models/TaskModel';
 import database from '../../utils/database';
@@ -27,10 +28,11 @@ import { TaskContext } from '../../utils/taskManager';
 import axios from 'axios';
 import { FaTrash } from 'react-icons/fa';
 import { useRouter } from 'next/dist/client/router';
+import Image from 'next/image';
 
 const TaskScreen = (props) => {
     const router = useRouter();
-    const {task, comments} = props;
+    const {task, comments, images} = props;
     const {useTaskStyles} = styleObjects();
     const classes = useTaskStyles();
     const {state, dispatch} = useContext(TaskContext);
@@ -104,6 +106,58 @@ const TaskScreen = (props) => {
         }
     }
 
+    // image inputs
+    const [imageFile, setImageFile] = useState('');
+    const [imageName, setImageName] = useState('');
+    // returning the uri data of the image file
+    const imageFileToDataUri = (imageFile)=> new Promise((resolve, reject)=>{
+        if(imageFile){
+            const reader = new FileReader();
+            reader.onload = (e)=>{
+                resolve(e.target.result);
+            };
+            reader.readAsDataURL(imageFile);
+        }
+    })
+    // image input change
+    const handleImageInputChange = (e)=>{
+        const image = e.target.files[0];
+        console.log(image);
+        if(image && image.type.substr(0,5) === 'image'){
+            imageFileToDataUri(image).
+            then(imageDataUri=> setImageFile(imageDataUri)); // using then to return the promise result
+            setImageName(image.name);
+        }else{
+            setImageFile(null);
+            setImageName(null);
+        }
+    }
+
+    const submitImage = async (e) =>{
+        e.preventDefault();
+        if(images.length >= 5){
+            enqueueSnackbar('Maximum limit of images reached', 
+            {
+                variant:'warning'
+            });
+            return;
+        }
+        try{
+            const {data} = await axios.post(`/api/task/${task._id}/addImage`,{imageURL:imageFile, imageName:imageName});
+            refreshData();
+            if(!data){
+                enqueueSnackbar('Image failed to be added', {variant:'error'});
+            }
+            enqueueSnackbar('Image has been added', {variant:'success'});
+        }catch{
+            enqueueSnackbar('Please choose an image', {
+                variant:'warning'
+            })
+        }
+    };
+
+    console.log(imageFile, imageName);
+
     return (
         <MainLayout title={task.title}>
            <Dialog
@@ -139,8 +193,34 @@ const TaskScreen = (props) => {
                             <Grid item xs={12}>
                                 <Typography variant='h5'>Attachments:</Typography>
                             </Grid>
-                            <Grid item xs={12}>
-                                
+                            <Grid item xs={12} style={{display:'flex', justifyContent:'space-between'}}>
+                                <Input type='file' accept='image/*' onChange={handleImageInputChange} id='contained-button-file'/>
+                                <Button variant='outlined' onClick={submitImage}>
+                                    Upload
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} className={classes.attachmentGallery}>
+                                <List style={{display:'flex'}}>
+                                    {images.length !== 0 ? images?.map((image, index)=>{
+                                        return (
+                                        <Box display='flex' className={classes.imageBox} flexDirection='column' alignItems='center' justifyContent='center' key={index}>
+                                            <ListItem  className={classes.imageItem}>
+                                                <Image
+                                                   src={image.imageUrl}
+                                                   alt={'Task Images'} 
+                                                   width={150}
+                                                   height={150}
+                                                />
+                                                
+                                            </ListItem>
+                                            <ListItem>
+                                                <Typography>{image.title.split('.png')}</Typography>
+                                            </ListItem>
+                                        </Box>
+                                        )
+                                    }):
+                                    <Typography className={classes.noComment}>No images attached</Typography>}
+                                </List>
                             </Grid>
                         </Grid>
 
@@ -208,7 +288,8 @@ export const getServerSideProps = async(context)=>{
     return{// individual task returned
         props:{
             task:JSON.parse(JSON.stringify(task)),
-            comments:task.comment?.map(database.convertDocToObj)
+            comments:task.comment?.map(database.convertDocToObj),
+            images: task.images?.map(image=>JSON.parse(JSON.stringify(image))),
         }
     }
 }
