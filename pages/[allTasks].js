@@ -29,6 +29,7 @@ import { Container,
     import dynamic from 'next/dynamic';
     import Cookies from 'js-cookie';
 import Tasks from '../utils/Tasks';
+import DrawerComp from '../utils/Drawer';
     
     const AllTasks = () => {
         const {state, dispatch} = useContext(TaskContext)
@@ -179,17 +180,14 @@ import Tasks from '../utils/Tasks';
                 {isLoading ? <LinearProgress/> :
                     <Container className={classes.container}>
                         <Typography className={classes.title}>All Tasks</Typography>
-                        {isEditing &&
-                        <Box style={{padding:'10px'}} display='flex'>
-                            <TextField
-                                variant='outlined'
-                                value={editValue}
-                                onChange={(e)=>setEditValue(e.target.value)}
-                                label='Enter the new title'
-                            />
-                            <Button variant='contained' onClick={editHandler} style={{marginLeft:'10px'}}>Edit</Button>
-                        </Box>
-                        }
+
+                        <DrawerComp
+                            editHandler={editHandler}
+                            isEditing={isEditing}
+                            setIsEditing={setIsEditing}
+                            setEditValue={setEditValue}
+                            editValue={editValue}
+                        />
                        
                         <Grid container alignItems='center' className={classes.tasksGrid}>
                         {userInfo ? <Tasks

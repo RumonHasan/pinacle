@@ -251,6 +251,19 @@ const styleObjects = ()=>{
         }
     }))
 
+    const useEditDrawerStyles = makeStyles(theme=>({
+        editList:{
+            display: 'flex',
+            justifyContent:'center',
+            flexDirection:'column',
+            alignItems:'center',
+            padding: theme.spacing(2),
+        },
+        MuiDrawer:{
+            background: colors.secondary,
+        }
+    }));
+
     return{
         useLayoutStyles,
         useSidebarStyles,
@@ -260,6 +273,7 @@ const styleObjects = ()=>{
         useLoginStyles,
         useCreateStyles,
         useRegisterStyles,
+        useEditDrawerStyles,
     }
 }
 

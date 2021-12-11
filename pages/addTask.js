@@ -35,7 +35,7 @@ import {TaskContext} from '../utils/taskManager';
        e.preventDefault();
        try{
         const {data} = await axios.post('/api/task/add', {title: taskForm.title, 
-        details: taskForm.details, completed: taskForm.completed, comment:[]},
+        details: taskForm.details, completed: taskForm.completed, comment:[], images:[]},
         {
             // passing on the headers userToken
             headers: {

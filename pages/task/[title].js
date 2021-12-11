@@ -137,6 +137,15 @@ const TaskScreen = (props) => {
 
                         <Grid container alignItems='center' style={{padding:'30px'}}>
                             <Grid item xs={12}>
+                                <Typography variant='h5'>Attachments:</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                
+                            </Grid>
+                        </Grid>
+
+                        <Grid container alignItems='center' style={{padding:'30px'}}>
+                            <Grid item xs={12}>
                                 <Badge badgeContent={comments ? comments.length: 0} color='primary'>
                                     <Typography variant='h5'>Comments:</Typography>
                                 </Badge>

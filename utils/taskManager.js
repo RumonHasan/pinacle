@@ -32,6 +32,17 @@ const reducer = (state, action)=>{
                 ...state,
                 darkMode:true
             }
+        // side drawer
+        // case 'OPEN_DRAWER':
+        //     return{
+        //         ...state,
+        //         drawerState: true
+        //     }
+        // case 'CLOSE_DRAWER':
+        //     return{
+        //         ...state,
+        //         drawerState: false
+        //     }
         
         // search value
         case 'UPDATE_SEARCH_VALUE':
