@@ -156,7 +156,18 @@ const TaskScreen = (props) => {
         }
     };
 
-    console.log(imageFile, imageName);
+    // delete image 
+    const deleteImageHandler = async (imageId)=>{
+        try{
+            const {data} = await axios.post(`/api/task/${task._id}/deleteImage`, {imageId: imageId});
+            enqueueSnackbar('Image has been deleted', {
+                variant:'success'
+            });
+            refreshData();
+        }catch{
+            enqueueSnackbar('Unable to delete the image',{variant:'error'})
+        }
+    }
 
     return (
         <MainLayout title={task.title}>
@@ -213,8 +224,9 @@ const TaskScreen = (props) => {
                                                 />
                                                 
                                             </ListItem>
-                                            <ListItem>
+                                            <ListItem style={{display:'flex', justifyContent:'space-between'}}>
                                                 <Typography>{image.title.split('.png')}</Typography>
+                                                <IconButton onClick={()=>deleteImageHandler(image._id)}><FaTrash/></IconButton>
                                             </ListItem>
                                         </Box>
                                         )

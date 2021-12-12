@@ -147,7 +147,7 @@ import DrawerComp from '../utils/Drawer';
                {variant:'error'})
             }
         }
-
+        // updating the data on the client side 
         const clientTaskUpdate = ()=>{
             setTaskItems(prevTasks => {
                 const existTask = prevTasks.find(task => task._id === editId);
@@ -157,6 +157,16 @@ import DrawerComp from '../utils/Drawer';
                 };
             }
         )
+        }
+        // task select handler
+        const taskSelectHandler = async (taskId, taskState)=>{
+            try{
+                const {data} = await axios.post(`/api/task/${taskId}/taskComplete`, {taskState:taskState});
+                enqueueSnackbar('Task has been completed', {variant:'success'});
+                refreshData();
+            }catch{
+                enqueueSnackbar('unable to complete task', {variant:'error'})
+            }
         }
         
         
@@ -194,6 +204,7 @@ import DrawerComp from '../utils/Drawer';
                             editStateController={editStateController}
                             taskItems={taskItems}
                             deleteTaskHandler={deleteTaskHandler}
+                            taskSelectHandler={taskSelectHandler}
                         /> :
                         <NextLink href='/login' passHref>
                             <Link>

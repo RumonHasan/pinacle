@@ -9,15 +9,20 @@ RadioGroup,
 FormControlLabel,
 Radio, Typography,
 Link,
-IconButton
+IconButton,
+Checkbox,
+FormGroup
 } from '@material-ui/core'
 import NextLink from 'next/link';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import styleObjects from './styles';
 
-const Tasks = ({ editStateController, taskItems,deleteTaskHandler}) => {
+const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHandler}) => {
     const {useAllTaskStyles} = styleObjects();//i love u
     const classes = useAllTaskStyles();
+    const getStatusValue = (e)=>{
+        console.log(e.target.value);
+    }
     return (
         <>
     {taskItems?.map((task, index)=>{
@@ -26,18 +31,15 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler}) => {
                                 <Container className={classes.taskContainer}>   
                                         <Box display='flex'>           
                                             <Box onClick={()=>editStateController(task._id, task.title)}>
-                                                <FormControl component='fieldset'> 
-                                                    <RadioGroup
-                                                    aria-label={task.title}
-                                                    defaultValue=''
-                                                    name={task.title}>
-                                                        <FormControlLabel className={classes.taskTitle} 
-                                                            value={task.title} 
-                                                            control={<Radio/>} 
-                                                            label={task.title} 
-                                                            />
-                                                    </RadioGroup>
-                                                </FormControl>
+                                                <FormGroup>
+                                                    <FormControlLabel
+                                                        control={<Checkbox/>}
+                                                        label={task.title}
+                                                        value={task.completed}
+                                                        onChange={getStatusValue}
+                                                        onClick={()=>taskSelectHandler(task._id)}
+                                                    />
+                                                </FormGroup>
                                             </Box>
                                             
                                         </Box>
