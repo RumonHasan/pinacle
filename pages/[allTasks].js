@@ -15,7 +15,7 @@ import { Container,
     Divider, 
     DialogActions, 
     Button, 
-    DialogContent, LinearProgress, TextField } from '@material-ui/core';
+    DialogContent, LinearProgress, TextField, FormGroup, Checkbox } from '@material-ui/core';
     import { useRouter } from 'next/dist/client/router';
     import React,{useContext, useEffect, useState} from 'react'
     import MainLayout from '../components/MainLayout';
@@ -70,7 +70,7 @@ import DrawerComp from '../utils/Drawer';
                 {variant:'error'})
             }
 
-        },[])
+        },[]);
     
         // search function
         const userTasks = Cookies.get('userTasks') ?
@@ -159,10 +159,12 @@ import DrawerComp from '../utils/Drawer';
         )
         }
         // task select handler
+        const getStatusValue = (e)=>{
+            console.log(e.target.value);
+        }
         const taskSelectHandler = async (taskId, taskState)=>{
             try{
                 const {data} = await axios.post(`/api/task/${taskId}/taskComplete`, {taskState:taskState});
-                enqueueSnackbar('Task has been completed', {variant:'success'});
                 refreshData();
             }catch{
                 enqueueSnackbar('unable to complete task', {variant:'error'})
@@ -214,7 +216,50 @@ import DrawerComp from '../utils/Drawer';
                             </Link>
                         </NextLink>}
                         </Grid>
+
                         <Typography className={classes.title}>Completed</Typography>
+                        <Grid container alignItems='center' className={classes.tasksGrid}>
+                            {userInfo && taskItems?.map((task, index)=>{
+                                return (
+                                    <Grid item xs={12} key={index} className={classes.taskBlock}>
+                                <Container className={classes.taskContainer}>   
+                                        <Box display='flex'>           
+                                            <Box>
+                                                <FormGroup>
+                                                    <FormControlLabel
+                                                        control={<Checkbox/>}
+                                                        label={task.title}
+                                                        value={task.completed}
+                                                        onChange={getStatusValue}
+                                                        onClick={()=>taskSelectHandler(task._id)}
+                                                    />
+                                                </FormGroup>
+                                            </Box>
+                                        </Box>
+                                            
+                                    <Typography className={classes.taskTimestamp}>
+                                        {task.createdAt.toString()}
+                                    </Typography>
+                                    <Box className={classes.taskBtn}>
+                                        <NextLink href={`/task/${task.title}`} passHref>
+                                            <Link>
+                                                <Box display='flex'>
+                                                    <Typography>View Details</Typography>
+                                                </Box>
+                                            </Link>
+                                        </NextLink>
+                                        <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
+                                            <FaTrash/>
+                                        </IconButton>
+                                        <IconButton onClick={()=>editStateController(task._id, task.title)}>
+                                                <FaEdit/>
+                                        </IconButton>   
+                                    </Box>
+                                </Container>
+                        </Grid>
+                                )
+                            })}
+                        </Grid>
                 </Container>
                 }
                 

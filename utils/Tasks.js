@@ -30,7 +30,7 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHan
                         <Grid item xs={12} key={index} className={classes.taskBlock}>
                                 <Container className={classes.taskContainer}>   
                                         <Box display='flex'>           
-                                            <Box onClick={()=>editStateController(task._id, task.title)}>
+                                            <Box>
                                                 <FormGroup>
                                                     <FormControlLabel
                                                         control={<Checkbox/>}
@@ -41,7 +41,6 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHan
                                                     />
                                                 </FormGroup>
                                             </Box>
-                                            
                                         </Box>
                                             
                                     <Typography className={classes.taskTimestamp}>
@@ -58,6 +57,9 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHan
                                         <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
                                             <FaTrash/>
                                         </IconButton>
+                                        <IconButton onClick={()=>editStateController(task._id, task.title)}>
+                                                <FaEdit/>
+                                        </IconButton>   
                                     </Box>
                                 </Container>
                         </Grid>
