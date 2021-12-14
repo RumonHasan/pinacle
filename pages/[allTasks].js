@@ -159,16 +159,25 @@ import DrawerComp from '../utils/Drawer';
         )
         }
         // task select handler
-        const getStatusValue = (e)=>{
-            console.log(e.target.value);
-        }
         const taskSelectHandler = async (taskId, taskState)=>{
             try{
                 const {data} = await axios.post(`/api/task/${taskId}/taskComplete`, {taskState:taskState});
                 refreshData();
+                clientTaskStateHandler(taskId, taskState);
             }catch{
                 enqueueSnackbar('unable to complete task', {variant:'error'})
             }
+        }
+
+        // task client state switch
+        const clientTaskStateHandler = (taskId, taskState)=>{
+            setTaskItems(prevTasks=>{
+                const existTask = prevTasks.find(task=> task._id === taskId);
+                if(existTask){
+                    return prevTasks.map((task)=>
+                    task._id === taskId ? {...task, completed:!taskState}: task)
+                };
+            })
         }
         
         
@@ -202,64 +211,21 @@ import DrawerComp from '../utils/Drawer';
                         />
                        
                         <Grid container alignItems='center' className={classes.tasksGrid}>
-                        {userInfo ? <Tasks
-                            editStateController={editStateController}
-                            taskItems={taskItems}
-                            deleteTaskHandler={deleteTaskHandler}
-                            taskSelectHandler={taskSelectHandler}
-                        /> :
-                        <NextLink href='/login' passHref>
-                            <Link>
-                                <Typography variant='h6' style={{opacity:0.7, color: 'white'}}>
-                                    Login to view your tasks
-                                </Typography>
-                            </Link>
-                        </NextLink>}
+                            {userInfo ? <Tasks
+                                editStateController={editStateController}
+                                taskItems={taskItems}
+                                deleteTaskHandler={deleteTaskHandler}
+                                taskSelectHandler={taskSelectHandler}
+                            /> :
+                            <NextLink href='/login' passHref>
+                                <Link>
+                                    <Typography variant='h6' style={{opacity:0.7, color: 'white'}}>
+                                        Login to view your tasks
+                                    </Typography>
+                                </Link>
+                            </NextLink>}
                         </Grid>
 
-                        <Typography className={classes.title}>Completed</Typography>
-                        <Grid container alignItems='center' className={classes.tasksGrid}>
-                            {userInfo && taskItems?.map((task, index)=>{
-                                return (
-                                    <Grid item xs={12} key={index} className={classes.taskBlock}>
-                                <Container className={classes.taskContainer}>   
-                                        <Box display='flex'>           
-                                            <Box>
-                                                <FormGroup>
-                                                    <FormControlLabel
-                                                        control={<Checkbox/>}
-                                                        label={task.title}
-                                                        value={task.completed}
-                                                        onChange={getStatusValue}
-                                                        onClick={()=>taskSelectHandler(task._id)}
-                                                    />
-                                                </FormGroup>
-                                            </Box>
-                                        </Box>
-                                            
-                                    <Typography className={classes.taskTimestamp}>
-                                        {task.createdAt.toString()}
-                                    </Typography>
-                                    <Box className={classes.taskBtn}>
-                                        <NextLink href={`/task/${task.title}`} passHref>
-                                            <Link>
-                                                <Box display='flex'>
-                                                    <Typography>View Details</Typography>
-                                                </Box>
-                                            </Link>
-                                        </NextLink>
-                                        <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
-                                            <FaTrash/>
-                                        </IconButton>
-                                        <IconButton onClick={()=>editStateController(task._id, task.title)}>
-                                                <FaEdit/>
-                                        </IconButton>   
-                                    </Box>
-                                </Container>
-                        </Grid>
-                                )
-                            })}
-                        </Grid>
                 </Container>
                 }
                 

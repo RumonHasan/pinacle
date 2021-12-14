@@ -14,33 +14,23 @@ Checkbox,
 FormGroup
 } from '@material-ui/core'
 import NextLink from 'next/link';
-import { FaTrash, FaEdit } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaCheck, FaTimes } from 'react-icons/fa';
 import styleObjects from './styles';
 
 const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHandler}) => {
     const {useAllTaskStyles} = styleObjects();//i love u
     const classes = useAllTaskStyles();
-    const getStatusValue = (e)=>{
-        console.log(e.target.value);
-    }
     return (
         <>
     {taskItems?.map((task, index)=>{
                     return (
                         <Grid item xs={12} key={index} className={classes.taskBlock}>
                                 <Container className={classes.taskContainer}>   
-                                        <Box display='flex'>           
-                                            <Box>
-                                                <FormGroup>
-                                                    <FormControlLabel
-                                                        control={<Checkbox/>}
-                                                        label={task.title}
-                                                        value={task.completed}
-                                                        onChange={getStatusValue}
-                                                        onClick={()=>taskSelectHandler(task._id)}
-                                                    />
-                                                </FormGroup>
-                                            </Box>
+                                        <Box display='flex' justifyContent='center' alignItems='center' className={task.completed ? classes.checkTask : classes.uncheckTask}>           
+                                                <IconButton onClick={()=> taskSelectHandler(task._id)}>
+                                                    {task.completed ? <FaTimes/> :<FaCheck/>}
+                                                </IconButton>
+                                                <Typography>{task.title}</Typography>
                                         </Box>
                                             
                                     <Typography className={classes.taskTimestamp}>

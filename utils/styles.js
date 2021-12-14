@@ -160,6 +160,13 @@ const styleObjects = ()=>{
             fontSize: 'x-small',
             opacity: 0.5
         },
+        // check and uncheck tasks
+        checkTask:{ 
+            textDecoration: 'line-through'
+        },
+        uncheckTask:{
+
+        }
     }));
 
     const useAddTaskStyles = makeStyles(theme=>({
