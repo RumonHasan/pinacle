@@ -12,7 +12,9 @@ taskCompleteHandler.post(async(req,res)=>{
         await task.updateOne({
             completed: !taskStatus
         })
+        const taskCompleted = await task.save(); // saving after completion
         await database.disconnect();
+        res.send({taskCompleted});
     }else{
         res.statusCode(404).send({message:'Unable to find task'})
     }

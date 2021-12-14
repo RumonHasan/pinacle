@@ -27,7 +27,7 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHan
                         <Grid item xs={12} key={index} className={classes.taskBlock}>
                                 <Container className={classes.taskContainer}>   
                                         <Box display='flex' justifyContent='center' alignItems='center' className={task.completed ? classes.checkTask : classes.uncheckTask}>           
-                                                <IconButton onClick={()=> taskSelectHandler(task._id)}>
+                                                <IconButton onClick={()=> taskSelectHandler(task._id, task.completed)}>
                                                     {task.completed ? <FaTimes/> :<FaCheck/>}
                                                 </IconButton>
                                                 <Typography>{task.title}</Typography>
