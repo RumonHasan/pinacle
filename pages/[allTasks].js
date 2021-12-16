@@ -21,7 +21,7 @@ import { Container,
     import MainLayout from '../components/MainLayout';
     import styleObjects from '../utils/styles';
     import NextLink from 'next/link';
-    import {BiDetail} from 'react-icons/bi';
+    import {BsArchiveFill} from 'react-icons/bs';
     import { FaTrash, FaEdit, FaTimes, FaCheck } from 'react-icons/fa';
     import { TaskContext } from '../utils/taskManager';
     import axios from 'axios';
@@ -254,8 +254,8 @@ import DrawerComp from '../utils/Drawer';
                                         <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
                                             <FaTrash/>
                                         </IconButton>
-                                        <IconButton onClick={()=>editStateController(task._id, task.title)}>
-                                                <FaEdit/>
+                                        <IconButton>
+                                                <BsArchiveFill/>
                                         </IconButton>   
                                     </Box>
                                 </Container>

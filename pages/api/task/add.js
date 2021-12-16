@@ -9,6 +9,11 @@ handler.use(isAuth); // using it to confirm the user token
 
 handler.post(async(req,res)=>{
     await database.connect();
+    const existTask = await Task.findOne({title:req.body.title});
+    if(existTask){
+        res.statusCode(404).send({messsage:'Task with the title already exists!'});
+        return;
+    }
     const newTask = new Task({
         ...req.body,
         user: req.user._id

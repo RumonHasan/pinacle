@@ -175,7 +175,24 @@ const TaskScreen = (props) => {
 
     // edit details
     const editStateController = (taskId, taskDetails)=>{
-
+        setIsEditing(true);
+        setEditId(taskId); // not needed here... changes needed to made later
+        setEditValue(taskDetails);
+    }
+    // updating task details
+    const updateDetails = async ()=>{
+        try{
+            const {data} = await axios.post(`/api/task/${task._id}/updateDetails`, {newDetails: editValue});
+            refreshData();
+            setIsEditing(false);
+            enqueueSnackbar('Task details have been updated', {
+                variant:'success'
+            })
+        }catch{
+            enqueueSnackbar('Failed to update details',{
+                variant:'error'
+            })
+        }
     }
 
     return (
@@ -202,10 +219,10 @@ const TaskScreen = (props) => {
                         <Grid container alignItems='center' style={{padding:'30px'}}>
                             <Grid item xs={12} style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                                 <Typography variant='h5'>Details:</Typography>
-                                {isEditing ?<>
-                                <Button variant='contained'>Cancel</Button>
-                                <Button variant='contained'>Update</Button>   
-                                </> :
+                                {isEditing ?<Box style={{padding:'2px'}}>
+                                <Button variant='contained' style={{marginRight:'2px'}} onClick={()=>setIsEditing(false)}>Cancel</Button>
+                                <Button variant='contained' onClick={updateDetails}>Update</Button>   
+                                </Box> :
                                 <IconButton onClick={()=>editStateController(task._id, task.details)}>
                                     <FaEdit/>
                                 </IconButton>}
@@ -325,7 +342,7 @@ export const getServerSideProps = async(context)=>{
     return{// individual task returned
         props:{
             task:JSON.parse(JSON.stringify(task)),
-            comments:task.comment?.map(database.convertDocToObj),
+            comments:task.comment?.map(comment=>JSON.parse(JSON.stringify(comment))),
             images: task.images?.map(image=>JSON.parse(JSON.stringify(image))),
         }
     }

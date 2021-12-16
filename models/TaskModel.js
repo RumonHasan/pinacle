@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { FaLessThanEqual } from 'react-icons/fa';
 
 const commentSchema = new mongoose.Schema({
     comment: {type:String, required: true}
@@ -22,6 +21,7 @@ const taskSchema = new mongoose.Schema({
     title: {type: String, required: true},
     details: {type:String, required: true},
     completed: {type:Boolean, required:true, default:false},
+    archive:{type:Boolean, required: true, default:false},
     images:[imageSchema],
     comment: [commentSchema]
 },{

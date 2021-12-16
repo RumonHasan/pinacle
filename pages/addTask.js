@@ -22,7 +22,13 @@ import {TaskContext} from '../utils/taskManager';
         title:'',
         details:'',
         completed:false,
-    })
+        archive:false
+    });
+    // image state
+    const [images, setImages] = useState([{
+        title:'',
+        imageUrl: '',
+    }])
     const handleTaskChange = (e)=>{
         const {value, name} = e.target;
         setTaskForm({
@@ -35,7 +41,7 @@ import {TaskContext} from '../utils/taskManager';
        e.preventDefault();
        try{
         const {data} = await axios.post('/api/task/add', {title: taskForm.title, 
-        details: taskForm.details, completed: taskForm.completed, comment:[], images:[]},
+        details: taskForm.details, completed: taskForm.completed, archive: taskForm.archive, comment:[], images:[]},
         {
             // passing on the headers userToken
             headers: {
@@ -47,10 +53,8 @@ import {TaskContext} from '../utils/taskManager';
             {variant:'success'},
         )
        router.push('/allTasks');
-       }catch(err){
-            enqueueSnackbar(
-                err.message,{variant:'error'}
-            )
+       }catch{
+           enqueueSnackbar('Task already exists', {variant:'error'})
        }
        setTaskForm({
            title:'',

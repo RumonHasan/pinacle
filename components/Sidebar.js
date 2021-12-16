@@ -20,6 +20,7 @@ import dynamic from 'next/dynamic';
 import NextLink from 'next/link';
 import { FaHome } from 'react-icons/fa';
 import {GrNotes} from 'react-icons/gr';
+import {BsArchiveFill} from 'react-icons/bs';
 import {MdNotificationImportant} from 'react-icons/md';
 import {IoMdCreate} from 'react-icons/io';
 import { FaCalendar, FaPlus, FaTimes } from 'react-icons/fa';
@@ -88,10 +89,10 @@ const Sidebar = () => {
 
                     <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>
-                            <MdNotificationImportant className={classes.listIcon}/>
-                            <NextLink href='/notes' passHref>
+                            <BsArchiveFill className={classes.listIcon}/>
+                            <NextLink href='/archive' passHref>
                                 <Link>
-                                    <Typography>Important</Typography>
+                                    <Typography>Archive</Typography>
                                 </Link>
                             </NextLink>
                         </Container>
