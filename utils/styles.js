@@ -124,6 +124,7 @@ const styleObjects = ()=>{
         tasksGrid:{
             overflowY:'auto',
             maxHeight:'280px',
+            paddingTop:theme.spacing(2),
         },
         taskBlock:{
             background: colors.taskBlock,
@@ -137,6 +138,7 @@ const styleObjects = ()=>{
             padding:theme.spacing(1),
             display:'flex',
             justifyContent:'space-between',
+            transition: '450ms',
             '& a':{
                 color:colors.mainWhite
             },
@@ -162,7 +164,8 @@ const styleObjects = ()=>{
         },
         // check and uncheck tasks
         checkTask:{ 
-            textDecoration: 'line-through'
+            textDecoration: 'line-through',
+            textDecorationThickness: 2
         },
         uncheckTask:{
 
@@ -238,6 +241,10 @@ const styleObjects = ()=>{
         },
         imageBox:{
             padding:theme.spacing(1),
+        },
+        imageInput:{
+            background: 'transparent',
+            cursor: 'pointer',
         }
     }));
 

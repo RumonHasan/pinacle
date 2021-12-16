@@ -13,6 +13,7 @@ handler.post(async(req,res)=>{
         ...req.body,
         user: req.user._id
     })
+    console.log(req.user._id);
     const tasks = await newTask.save();
     await database.disconnect();
     // sending back the new task item

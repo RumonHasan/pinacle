@@ -23,6 +23,7 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHan
     return (
         <>
     {taskItems?.map((task, index)=>{
+                if(!task.completed)
                     return (
                         <Grid item xs={12} key={index} className={classes.taskBlock}>
                                 <Container className={classes.taskContainer}>   

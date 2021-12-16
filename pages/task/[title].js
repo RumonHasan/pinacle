@@ -26,7 +26,7 @@ import database from '../../utils/database';
 import styleObjects from '../../utils/styles';
 import { TaskContext } from '../../utils/taskManager';
 import axios from 'axios';
-import { FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useRouter } from 'next/dist/client/router';
 import Image from 'next/image';
 
@@ -39,6 +39,10 @@ const TaskScreen = (props) => {
     const {delete:{deleteBox, deleteId, deleteTitle}} = state;
     const {comment} = state; // comment change handler
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    // edit states 
+    const [isEditing, setIsEditing] = useState(false);
+    const [editValue, setEditValue] = useState('');
+    const [editId, setEditId] = useState('');
     
     const commentHandler = (e)=>{
         dispatch({type:'ADD_COMMENT', payload: e.target.value})
@@ -169,6 +173,11 @@ const TaskScreen = (props) => {
         }
     }
 
+    // edit details
+    const editStateController = (taskId, taskDetails)=>{
+
+    }
+
     return (
         <MainLayout title={task.title}>
            <Dialog
@@ -191,12 +200,29 @@ const TaskScreen = (props) => {
                     <CardContent>
                         <Typography variant='h4' style={{padding:'30px'}}>{task.title}</Typography>
                         <Grid container alignItems='center' style={{padding:'30px'}}>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                                 <Typography variant='h5'>Details:</Typography>
+                                {isEditing ?<>
+                                <Button variant='contained'>Cancel</Button>
+                                <Button variant='contained'>Update</Button>   
+                                </> :
+                                <IconButton onClick={()=>editStateController(task._id, task.details)}>
+                                    <FaEdit/>
+                                </IconButton>}
+                                
                             </Grid>
-                            <Grid item xs={12} className={classes.detailsBlock}>
+                            {isEditing ?
+                            <TextField
+                                fullWidth
+                                variant='outlined'
+                                label={editValue}
+                                value={editValue}
+                                onChange={(e)=>setEditValue(e.target.value)}
+                            /> :
+                                <Grid item xs={12} className={classes.detailsBlock}>
                                 <Typography variant='h6' style={{fontSize:'19px'}}>{task.details}</Typography>
-                            </Grid>
+                            </Grid>}
+                            
                             <Grid item sm></Grid>
                         </Grid>
 
@@ -205,7 +231,7 @@ const TaskScreen = (props) => {
                                 <Typography variant='h5'>Attachments:</Typography>
                             </Grid>
                             <Grid item xs={12} style={{display:'flex', justifyContent:'space-between'}}>
-                                <Input type='file' accept='image/*' onChange={handleImageInputChange} id='contained-button-file'/>
+                                <Input type='file' accept='image/*' onChange={handleImageInputChange} id='contained-button-file' className={classes.imageInput}/>
                                 <Button variant='outlined' onClick={submitImage}>
                                     Upload
                                 </Button>
@@ -281,7 +307,6 @@ const TaskScreen = (props) => {
                     </CardContent>
                     <CardActions>
                         <Button variant='contained' onClick={()=>deleteTaskHandler(task._id,task.title)}>Delete Task</Button>
-                        <Button variant='contained'>Edit</Button>
                     </CardActions>
                 </Card>
             </Container>
