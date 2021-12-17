@@ -25,10 +25,11 @@ import {MdNotificationImportant} from 'react-icons/md';
 import {IoMdCreate} from 'react-icons/io';
 import { FaCalendar, FaPlus, FaTimes } from 'react-icons/fa';
 import { useRouter, Controller } from 'next/dist/client/router';
+import Cookies from 'js-cookie';
 
 const Sidebar = () => {
     const {state, dispatch} = useContext(TaskContext);
-    const {taskLength, searchValue, userInfo} = state;
+    const {taskLength, searchValue, userInfo, archiveLength} = state;
     const {useSidebarStyles} = styleObjects();
     const classes = useSidebarStyles();
     const router = useRouter();
@@ -96,7 +97,7 @@ const Sidebar = () => {
                                 </Link>
                             </NextLink>
                         </Container>
-                        <Badge badgeContent={2}></Badge>
+                        <Badge badgeContent={archiveLength}></Badge>
                     </ListItem>
 
                     <ListItem className={classes.menuListItem}>

@@ -56,7 +56,7 @@ import DrawerComp from '../utils/Drawer';
                 const fetchTasks = async ()=>{
                     try{
                         const {data} = await axios.post('/api/task/userTasks', {userId:userInfo._id});
-                        setTaskItems(data);
+                        fetchNotArchivedTasks(data).then((tasks)=>setTaskItems(tasks));
                         Cookies.set('userTasks', data);
                         dispatch({type:'TOTAL_TASKS', payload: data.length});
                         setLoading(false);
@@ -71,6 +71,15 @@ import DrawerComp from '../utils/Drawer';
             }
 
         },[]);
+
+        const fetchNotArchivedTasks = (tasks)=> new Promise((resolve, reject)=>{
+            if(tasks){
+                const nonArchivedTasks = tasks?.filter((task)=> task.archive === false);
+                resolve(nonArchivedTasks);
+            }else{
+                reject('unable to find tasks');
+            }
+        })
     
         // search function
         const userTasks = Cookies.get('userTasks') ?
@@ -179,6 +188,18 @@ import DrawerComp from '../utils/Drawer';
                 };
             })
         }
+
+        // change archive state
+        const changeArchiveState = async (taskId, archiveStatus)=>{
+            try{
+                const {data} = await axios.post(`/api/task/${taskId}/archiveState`, {taskId:taskId});
+                refreshData();
+                router.push('/archive');
+                enqueueSnackbar('Task has been added to the archives', {variant:'success'});
+            }catch{
+                enqueueSnackbar('Failed to archive the task', {variant:'error'})
+            }
+        }
         
         
         return (
@@ -229,7 +250,7 @@ import DrawerComp from '../utils/Drawer';
                         <Typography className={classes.title}>Completed</Typography>
                         <Grid container alignItems='center' className={classes.tasksGrid}>
                         {taskItems?.map((task, index)=>{
-                            if(task.completed){
+                            if(task.completed && !task.archive){
                             return (
                             <Grid item xs={12} key={index} className={classes.taskBlock}>
                                 <Container className={classes.taskContainer}>   
@@ -254,7 +275,7 @@ import DrawerComp from '../utils/Drawer';
                                         <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
                                             <FaTrash/>
                                         </IconButton>
-                                        <IconButton>
+                                        <IconButton onClick={()=>changeArchiveState(task._id, task.archive)}>
                                                 <BsArchiveFill/>
                                         </IconButton>   
                                     </Box>

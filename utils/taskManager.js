@@ -13,6 +13,7 @@ const initialStates = {
         deleteTitle: '',
     },
     comment:'',
+    archiveTasks:0,
     // user info
     userInfo: Cookies.get('userInfo')?
     JSON.parse(Cookies.get('userInfo')): {},
@@ -32,18 +33,12 @@ const reducer = (state, action)=>{
                 ...state,
                 darkMode:true
             }
-        // side drawer
-        // case 'OPEN_DRAWER':
-        //     return{
-        //         ...state,
-        //         drawerState: true
-        //     }
-        // case 'CLOSE_DRAWER':
-        //     return{
-        //         ...state,
-        //         drawerState: false
-        //     }
-        
+       // add archives
+       case 'ADD_TO_ARCHIVE':
+           return{
+               ...state,
+               archiveTasks: action.payload
+           }
         // search value
         case 'UPDATE_SEARCH_VALUE':
             return{
