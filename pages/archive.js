@@ -12,6 +12,7 @@ import { BsArchiveFill } from 'react-icons/bs';
 import NextLink from 'next/link';
 import { Router } from 'next/dist/client/router';
 import { useRouter } from 'next/dist/client/router';
+import dynamic from 'next/dynamic';
 
 const Archive = () => {
     const {state, dispatch} = useContext(TaskContext);
@@ -19,6 +20,9 @@ const Archive = () => {
     const {enqueueSnackbar} = useSnackbar();
     const router = useRouter();
     const [archivedTasks, setArchivedTasks] = useState([]);
+    const [archiveBox, setArchiveBox] = useState(false);
+    const [archiveTitle, setArchiveTitle] = useState('');
+    const [archiveId, setArchiveId] = useState('');
     // styles
     const {useAllTaskStyles} = styleObjects();
     const classes = useAllTaskStyles();
@@ -42,10 +46,10 @@ const Archive = () => {
         
             // client side delete
             const deleteTaskClient = (deleteId)=>{
-                const newItems = taskItems.filter((task)=>{
+                const newItems = archivedTasks.filter((task)=>{
                     return task._id !== deleteId
                 });
-                setTaskItems(newItems);
+                setArchivedTasks(newItems);
             }
         
             const deleteTask = async ()=>{ 
@@ -67,9 +71,18 @@ const Archive = () => {
 
     // task select handlers
             // task select handler
-            const taskSelectHandler = async (taskId)=>{
+            const handleArchiveBoxClose = ()=>{
+                setArchiveBox(false);
+            }
+            const openArchiveBox = (taskId, title)=>{
+                setArchiveBox(true);
+                setArchiveTitle(title);
+                setArchiveId(taskId);
+            }
+
+            const taskSelectHandler = async ()=>{
                 try{
-                    const {data} = await axios.post(`/api/task/${taskId}/taskComplete`);
+                    const {data} = await axios.post(`/api/task/${archiveId}/returnFromArchive`);
                     refreshData();
                     enqueueSnackbar('Task put back in your inbox', {variant:'success'});
                     router.push('/allTasks');
@@ -91,7 +104,7 @@ const Archive = () => {
             }
             fetchArchives();
         }else{
-            Router.push('/login');
+            router.push('/login');
         }
     },[]);
     // filter out the archive tasks
@@ -105,11 +118,13 @@ const Archive = () => {
     });
 
     useEffect(()=>{
-        dispatch({type:'ADD_TO_ARCHIVE', payload: archivedTasks.length});
-    },[]);
+        let archives = archivedTasks.length;
+        dispatch({type:'ADD_TO_ARCHIVE', payload: archives});
+    },[archivedTasks.length, dispatch]);
 
     return (
         <MainLayout title='Archives'>
+
                 <Dialog
                     open={deleteBox}
                     onClose={handleDeleteClose}
@@ -125,15 +140,31 @@ const Archive = () => {
                         <Button variant='contained' onClick={deleteTask}>Delete</Button>
                     </DialogActions>
                 </Dialog>
+
+
+                <Dialog
+                open={archiveBox}
+                onClose={handleArchiveBoxClose}>
+                    <DialogTitle>
+                        {archiveTitle} will be put back in inbox!
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <DialogActions style={{display:'flex', justifyContent:'center'}}>
+                            <Button variant='contained' onClick={taskSelectHandler}>Put Back</Button>
+                            <Button variant='contained' onClick={handleArchiveBoxClose}>Cancel</Button>
+                        </DialogActions>
+                    </DialogContent>
+                </Dialog>
+
             <Container className={classes.container}>
                 <Typography className={classes.title}>Archived Tasks</Typography>
                 <Grid container alignItems='center' className={classes.tasksGrid}>
                     {archivedTasks?.map((task, index)=>{
                         return(
-                            <Grid item xs={12} key={index} className={classes.taskBlock}>
+                            <Grid item xs={12} key={index} className={classes.taskBlock} style={{border:`2px solid ${task.taskBorder}`}}>
                                 <Container className={classes.taskContainer}>   
                                         <Box display='flex' justifyContent='center' alignItems='center' className={task.completed ? classes.checkTask : classes.uncheckTask}>           
-                                                <IconButton onClick={()=> taskSelectHandler(task._id)}>
+                                                <IconButton onClick={()=> openArchiveBox(task._id, task.title)}>
                                                     {task.completed ? <FaTimes/> :<FaCheck/>}
                                                 </IconButton>
                                                 <Typography>{task.title}</Typography>
@@ -152,10 +183,7 @@ const Archive = () => {
                                         </NextLink>
                                         <IconButton onClick={()=>deleteTaskHandler(task._id, task.title)}>
                                             <FaTrash/>
-                                        </IconButton>
-                                        <IconButton onClick={()=>changeArchiveState(task._id, task.archive)}>
-                                                <BsArchiveFill/>
-                                        </IconButton>   
+                                        </IconButton>  
                                     </Box>
                                 </Container>
                         </Grid>
@@ -167,4 +195,4 @@ const Archive = () => {
     )
 };
 
-export default Archive;
+export default dynamic(()=>  Promise.resolve(Archive), {ssr: false});

@@ -213,7 +213,7 @@ const TaskScreen = (props) => {
                 </DialogActions>
             </Dialog>
             <Container className={classes.cardContainer}>
-                <Card className={classes.taskCard}>
+                <Card className={classes.taskCard} style={{border:`2px solid ${task.taskBorder}`}}>
                     <CardContent>
                         <Typography variant='h4' style={{padding:'30px'}}>{task.title}</Typography>
                         <Grid container alignItems='center' style={{padding:'30px'}}>

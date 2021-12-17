@@ -55,8 +55,9 @@ const Login = () => {
     const googleSuccess = async (res)=>{
         const result = res?.profileObj;
         const token = res?.tokenId;
+        console.log(result);
         try{
-            dispatch({type:'ADD_USER_INFO', payload: {result, token}});
+            // dispatch({type:'ADD_USER_INFO', payload: {result, token}});
             // Cookies.set('userInfo', result);
             enqueueSnackbar(
                 'Login Successful',

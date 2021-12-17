@@ -25,7 +25,7 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHan
     {taskItems?.map((task, index)=>{
                 if(!task.completed && !task.archive)
                     return (
-                        <Grid item xs={12} key={index} className={classes.taskBlock}>
+                        <Grid item xs={12} key={index} className={classes.taskBlock} style={{border:`2px solid ${task.taskBorder}`}}>
                                 <Container className={classes.taskContainer}>   
                                         <Box display='flex' justifyContent='center' alignItems='center' className={task.completed ? classes.checkTask : classes.uncheckTask}>           
                                                 <IconButton onClick={()=> taskSelectHandler(task._id, task.completed)}>

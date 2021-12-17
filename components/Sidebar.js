@@ -20,16 +20,15 @@ import dynamic from 'next/dynamic';
 import NextLink from 'next/link';
 import { FaHome } from 'react-icons/fa';
 import {GrNotes} from 'react-icons/gr';
-import {BsArchiveFill} from 'react-icons/bs';
+import {BsArchiveFill, BsInboxFill} from 'react-icons/bs';
 import {MdNotificationImportant} from 'react-icons/md';
 import {IoMdCreate} from 'react-icons/io';
 import { FaCalendar, FaPlus, FaTimes } from 'react-icons/fa';
 import { useRouter, Controller } from 'next/dist/client/router';
-import Cookies from 'js-cookie';
 
 const Sidebar = () => {
     const {state, dispatch} = useContext(TaskContext);
-    const {taskLength, searchValue, userInfo, archiveLength} = state;
+    const {taskLength, searchValue, userInfo, archiveTasks} = state;
     const {useSidebarStyles} = styleObjects();
     const classes = useSidebarStyles();
     const router = useRouter();
@@ -64,10 +63,10 @@ const Sidebar = () => {
 
                         <ListItem className={classes.menuListItem}>
                         <Container className={classes.listTextContainer}>
-                            <FaHome className={classes.listIcon}/>
+                            <BsInboxFill className={classes.listIcon}/>
                             <NextLink href='/allTasks' passHref>
                                 <Link>
-                                    <Typography>All Tasks</Typography>
+                                    <Typography>Inbox</Typography>
                                 </Link>
                             </NextLink>
                         </Container>
@@ -85,7 +84,7 @@ const Sidebar = () => {
                                 </Link>
                             </NextLink>
                         </Container>
-                        <Badge badgeContent={2}></Badge>
+                        {/* <Badge badgeContent={2}></Badge> */}
                     </ListItem>
 
                     <ListItem className={classes.menuListItem}>
@@ -97,7 +96,7 @@ const Sidebar = () => {
                                 </Link>
                             </NextLink>
                         </Container>
-                        <Badge badgeContent={archiveLength}></Badge>
+                        <Badge badgeContent={archiveTasks}></Badge>
                     </ListItem>
 
                     <ListItem className={classes.menuListItem}>

@@ -23,6 +23,7 @@ const taskSchema = new mongoose.Schema({
     completed: {type:Boolean, required:true, default:false},
     archive:{type:Boolean, required: true, default:false},
     images:[imageSchema],
+    taskBorder: {type:String, required: true},
     comment: [commentSchema]
 },{
     timestamps:true,

@@ -58,7 +58,6 @@ import DrawerComp from '../utils/Drawer';
                         const {data} = await axios.post('/api/task/userTasks', {userId:userInfo._id});
                         fetchNotArchivedTasks(data).then((tasks)=>setTaskItems(tasks));
                         Cookies.set('userTasks', data);
-                        dispatch({type:'TOTAL_TASKS', payload: data.length});
                         setLoading(false);
                     }catch(err){
                         enqueueSnackbar('Tasks have not been fetched',{variant:'error'})
@@ -76,6 +75,7 @@ import DrawerComp from '../utils/Drawer';
             if(tasks){
                 const nonArchivedTasks = tasks?.filter((task)=> task.archive === false);
                 resolve(nonArchivedTasks);
+                dispatch({type:'TOTAL_TASKS', payload: nonArchivedTasks.length});
             }else{
                 reject('unable to find tasks');
             }
@@ -219,7 +219,7 @@ import DrawerComp from '../utils/Drawer';
                         <Button variant='contained' onClick={deleteTask}>Delete</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading ? <LinearProgress/> :
+                 
                     <Container className={classes.container}>
                         <Typography className={classes.title}>All Tasks</Typography>
                         
@@ -252,7 +252,7 @@ import DrawerComp from '../utils/Drawer';
                         {taskItems?.map((task, index)=>{
                             if(task.completed && !task.archive){
                             return (
-                            <Grid item xs={12} key={index} className={classes.taskBlock}>
+                            <Grid item xs={12} key={index} className={classes.taskBlock} style={{border:`2px solid ${task.taskBorder}`}}>
                                 <Container className={classes.taskContainer}>   
                                         <Box display='flex' justifyContent='center' alignItems='center' className={task.completed ? classes.checkTask : classes.uncheckTask}>           
                                                 <IconButton onClick={()=> taskSelectHandler(task._id, task.completed)}>
@@ -287,7 +287,6 @@ import DrawerComp from '../utils/Drawer';
                         </Grid>
 
                 </Container>
-                }
                 
             </MainLayout>
         )
