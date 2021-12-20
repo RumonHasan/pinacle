@@ -14,7 +14,7 @@ import axios from 'axios';
 import { useRouter } from 'next/dist/client/router';
 import {TaskContext} from '../utils/taskManager';
 import { HexColorPicker } from 'react-colorful';
-import { MdFormatColorFill } from 'react-icons/md';
+import { MdFormatColorFill} from 'react-icons/md';
 
  const AddTask = () => {
     const {state,dispatch} = useContext(TaskContext);
@@ -28,7 +28,8 @@ import { MdFormatColorFill } from 'react-icons/md';
         title:'',
         details:'',
         completed:false,
-        archive:false
+        archive:false,
+        important: false,
     });
     // image state: still in progress
     const [images, setImages] = useState([{
@@ -51,7 +52,10 @@ import { MdFormatColorFill } from 'react-icons/md';
        e.preventDefault();
        try{
         const {data} = await axios.post('/api/task/add', {title: taskForm.title, 
-        details: taskForm.details, completed: taskForm.completed, archive: taskForm.archive, comment:[], images:[], taskBorder: color},
+        details: taskForm.details, completed: taskForm.completed, archive: taskForm.archive, 
+        comment:[], images:[], 
+        taskBorder: color,
+        important: taskForm.important},
         {
             // passing on the headers userToken
             headers: {

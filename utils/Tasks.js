@@ -16,10 +16,23 @@ FormGroup
 import NextLink from 'next/link';
 import { FaTrash, FaEdit, FaCheck, FaTimes } from 'react-icons/fa';
 import styleObjects from './styles';
+import { MdLabelImportant, MdLabelImportantOutline } from 'react-icons/md';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
 
 const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHandler}) => {
     const {useAllTaskStyles} = styleObjects();//i love u
     const classes = useAllTaskStyles();
+    const {enqueueSnackbar} = useSnackbar();
+    // important task handler
+    const importantTaskHandler = async (taskId)=>{
+        try{
+            const {data} = await axios.post(`/api/task/${taskId}/updateImportant`, {taskId:taskId});
+            enqueueSnackbar('Task has been highlighted', {variant:'success'})
+        }catch{
+            enqueueSnackbar('Unable to highlight', {variant:'error'})
+        }
+    }
     return (
         <>
     {taskItems?.map((task, index)=>{
@@ -51,6 +64,9 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHan
                                         <IconButton onClick={()=>editStateController(task._id, task.title)}>
                                                 <FaEdit/>
                                         </IconButton>   
+                                        <IconButton onClick={()=>importantTaskHandler(task._id)}>
+                                            {task.important ? <MdLabelImportant/> : <MdLabelImportantOutline/>}
+                                        </IconButton>
                                     </Box>
                                 </Container>
                         </Grid>

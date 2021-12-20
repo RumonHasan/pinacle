@@ -114,6 +114,9 @@ const styleObjects = ()=>{
     }));
 
     const useAllTaskStyles = makeStyles(theme=>({
+        container:{
+            height: '100vh',
+        },
         title:{
             paddingTop:theme.spacing(2.5),
             fontSize:'xx-large',

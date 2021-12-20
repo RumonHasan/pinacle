@@ -110,7 +110,10 @@ const Sidebar = () => {
                         </Container>
                     </ListItem>
                 </List>
+                
             </Container>
+
+            <Button variant='outlined' style={{padding:1, marginTop:'10px'}}>New List <FaPlus/></Button>
 
             <Container className={classes.newTaskContainerBtn}>
                 <NextLink href={userInfo ? '/addTask': '/login'} passHref>
