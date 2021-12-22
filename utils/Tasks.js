@@ -19,19 +19,15 @@ import styleObjects from './styles';
 import { MdLabelImportant, MdLabelImportantOutline } from 'react-icons/md';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
+import { useRouter } from 'next/dist/client/router';
 
-const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHandler}) => {
+const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHandler, importantTaskHandler}) => {
     const {useAllTaskStyles} = styleObjects();//i love u
     const classes = useAllTaskStyles();
     const {enqueueSnackbar} = useSnackbar();
-    // important task handler
-    const importantTaskHandler = async (taskId)=>{
-        try{
-            const {data} = await axios.post(`/api/task/${taskId}/updateImportant`, {taskId:taskId});
-            enqueueSnackbar('Task has been highlighted', {variant:'success'})
-        }catch{
-            enqueueSnackbar('Unable to highlight', {variant:'error'})
-        }
+    const router = useRouter();
+    const refreshData = ()=>{
+        router.replace(router.asPath);
     }
     return (
         <>
@@ -64,7 +60,7 @@ const Tasks = ({ editStateController, taskItems,deleteTaskHandler, taskSelectHan
                                         <IconButton onClick={()=>editStateController(task._id, task.title)}>
                                                 <FaEdit/>
                                         </IconButton>   
-                                        <IconButton onClick={()=>importantTaskHandler(task._id)}>
+                                        <IconButton onClick={()=>importantTaskHandler(task._id, task.important)}>
                                             {task.important ? <MdLabelImportant/> : <MdLabelImportantOutline/>}
                                         </IconButton>
                                     </Box>

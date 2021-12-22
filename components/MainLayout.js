@@ -37,11 +37,11 @@ import Image from 'next/image';
 import { useRouter } from 'next/dist/client/router';
 import { useSnackbar } from 'notistack';
 import { GoogleLogout } from 'react-google-login';
+import { HexColorPicker } from 'react-colorful';
 
 const MainLayout = ({children, title}) => {
     const {state, dispatch} = useContext(TaskContext);
     const {userInfo} = state;
-    const {darkMode} = state;
     const {useLayoutStyles} = styleObjects();
     const classes = useLayoutStyles();
     const router = useRouter();
@@ -59,11 +59,11 @@ const MainLayout = ({children, title}) => {
     const clientId = '963986818059-jg6cmm0ge7p9k9jk7gid9304p92773f0.apps.googleusercontent.com';
 
     // dark mode controls
-    const darkmodeChangeHandler = ()=>{
-        dispatch({type:darkMode ? 'DARKMODE_OFF': 'DARKMODE_ON'})
-        const newDarkMode = !darkMode;
-        Cookies.set('darkMode', newDarkMode ? 'ON': 'OFF')
-    }
+    // const darkmodeChangeHandler = ()=>{
+    //     dispatch({type:darkMode ? 'DARKMODE_OFF': 'DARKMODE_ON'})
+    //     const newDarkMode = !darkMode;
+    //     Cookies.set('darkMode', newDarkMode ? 'ON': 'OFF')
+    // }
 
     // drawer anchor
     const [anchorDrawer, setAnchorDrawer] = useState(false);
@@ -74,13 +74,16 @@ const MainLayout = ({children, title}) => {
         setAnchorDrawer(true);
     }
 
+    // hex color picker
+    const [color, setColor] = useState(colors.main);
+
     // custom theme
     const customTheme = createTheme({
         palette:{
-            type: darkMode ? 'dark': 'light'
+            type: 'dark'
         },
         primary:{
-            main: colors.main
+            main: color
         },
         secondary:{
             main: colors.secondary
@@ -96,6 +99,7 @@ const MainLayout = ({children, title}) => {
         {variant:'success'});
         handleClosePop();
     }
+
     return (
         <div>
             <Head>
@@ -116,9 +120,9 @@ const MainLayout = ({children, title}) => {
 
                         <div className={classes.grow}></div>
                         
-                        <Button shape='round' variant='outlined' onClick={darkmodeChangeHandler} className={classes.darkmodeBtn}>
+                        {/* <Button shape='round' variant='outlined' onClick={darkmodeChangeHandler} className={classes.darkmodeBtn}>
                             <CgDarkMode/>
-                        </Button>
+                        </Button> */}
 
                             <Avatar style={{cursor:'pointer'}} 
                                 onClick={handleLoginPopOpen}

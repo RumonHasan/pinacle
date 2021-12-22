@@ -201,6 +201,27 @@ import { MdLabelImportant, MdLabelImportantOutline } from 'react-icons/md';
                 enqueueSnackbar('Failed to archive the task', {variant:'error'})
             }
         }
+
+        // important task handler
+        const importantTaskHandler = async (taskId, taskImportant)=>{
+            try{
+                const {data} = await axios.post(`/api/task/${taskId}/updateImportant`, {taskId:taskId});
+                refreshData();
+                clientImportantUpdate(taskId, taskImportant);
+            }catch{
+                enqueueSnackbar('Unable to highlight', {variant:'error'})
+            }
+        }
+        // client side update
+        const clientImportantUpdate = (taskId, taskImportant)=>{
+            setTaskItems(prevTasks => {
+                const findTask = prevTasks.find((task)=>task._id === taskId);
+                if(findTask){
+                    return prevTasks.map((task)=>
+                    task._id === taskId ? {...task, important:!taskImportant}: task)
+                }
+            })
+        }
         
         
         return (
@@ -238,6 +259,7 @@ import { MdLabelImportant, MdLabelImportantOutline } from 'react-icons/md';
                                 taskItems={taskItems}
                                 deleteTaskHandler={deleteTaskHandler}
                                 taskSelectHandler={taskSelectHandler}
+                                importantTaskHandler={importantTaskHandler}
                             /> :
                             <NextLink href='/login' passHref>
                                 <Link>
