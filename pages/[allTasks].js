@@ -31,6 +31,10 @@ import { Container,
 import Tasks from '../utils/Tasks';
 import DrawerComp from '../utils/Drawer';
 import { MdLabelImportant, MdLabelImportantOutline } from 'react-icons/md';
+// utility functions
+import {clientTaskStateHandler,
+clientImportantUpdate,
+clientTaskUpdate} from '../utils/utilityFunctions.js'
     
     const AllTasks = () => {
         const {state, dispatch} = useContext(TaskContext)
@@ -149,7 +153,7 @@ import { MdLabelImportant, MdLabelImportantOutline } from 'react-icons/md';
             try{
                 const {data} = await axios.post(`/api/task/${editId}/update`, {newValue: editValue});
                 refreshData();
-                clientTaskUpdate(); // updating the data on the client side 
+                clientTaskUpdate(setTaskItems); // updating the data on the client side 
                 setIsEditing(false); // closing edit field
                 enqueueSnackbar('Item has been updated', {variant:'success'})
             }catch(err){
@@ -157,37 +161,16 @@ import { MdLabelImportant, MdLabelImportantOutline } from 'react-icons/md';
                {variant:'error'})
             }
         }
-        // updating the data on the client side 
-        const clientTaskUpdate = ()=>{
-            setTaskItems(prevTasks => {
-                const existTask = prevTasks.find(task => task._id === editId);
-                if(existTask){
-                    return prevTasks.map(task =>
-                        task._id === editId ? {...task, title: editValue} : task)
-                };
-            }
-        )
-        }
+
         // task select handler
         const taskSelectHandler = async (taskId, taskState)=>{
             try{
                 const {data} = await axios.post(`/api/task/${taskId}/taskComplete`, {taskState:taskState});
                 refreshData();
-                clientTaskStateHandler(taskId, taskState);
+                clientTaskStateHandler(setTaskItems,taskId, taskState);
             }catch{
                 enqueueSnackbar('unable to complete task', {variant:'error'})
             }
-        }
-
-        // task client state switch
-        const clientTaskStateHandler = (taskId, taskState)=>{
-            setTaskItems(prevTasks=>{
-                const existTask = prevTasks.find(task=> task._id === taskId);
-                if(existTask){
-                    return prevTasks.map((task)=>
-                    task._id === taskId ? {...task, completed:!taskState}: task)
-                };
-            })
         }
 
         // change archive state
@@ -207,23 +190,12 @@ import { MdLabelImportant, MdLabelImportantOutline } from 'react-icons/md';
             try{
                 const {data} = await axios.post(`/api/task/${taskId}/updateImportant`, {taskId:taskId});
                 refreshData();
-                clientImportantUpdate(taskId, taskImportant);
+                clientImportantUpdate(setTaskItems, taskId, taskImportant);
             }catch{
                 enqueueSnackbar('Unable to highlight', {variant:'error'})
             }
         }
-        // client side update
-        const clientImportantUpdate = (taskId, taskImportant)=>{
-            setTaskItems(prevTasks => {
-                const findTask = prevTasks.find((task)=>task._id === taskId);
-                if(findTask){
-                    return prevTasks.map((task)=>
-                    task._id === taskId ? {...task, important:!taskImportant}: task)
-                }
-            })
-        }
-        
-        
+
         return (
             <MainLayout>
                 <Dialog

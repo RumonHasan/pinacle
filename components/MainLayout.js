@@ -19,7 +19,8 @@ List,
 ListItem,
 ListSubheader,
 Popover,
-Dialog
+Dialog,
+DialogTitle
 } from '@material-ui/core';
 import {CgDarkMode} from 'react-icons/cg';
 import {FaSearch} from 'react-icons/fa';
@@ -41,7 +42,7 @@ import { HexColorPicker } from 'react-colorful';
 
 const MainLayout = ({children, title}) => {
     const {state, dispatch} = useContext(TaskContext);
-    const {userInfo} = state;
+    const {userInfo, userTheme} = state;
     const {useLayoutStyles} = styleObjects();
     const classes = useLayoutStyles();
     const router = useRouter();
@@ -58,13 +59,6 @@ const MainLayout = ({children, title}) => {
     //client id
     const clientId = '963986818059-jg6cmm0ge7p9k9jk7gid9304p92773f0.apps.googleusercontent.com';
 
-    // dark mode controls
-    // const darkmodeChangeHandler = ()=>{
-    //     dispatch({type:darkMode ? 'DARKMODE_OFF': 'DARKMODE_ON'})
-    //     const newDarkMode = !darkMode;
-    //     Cookies.set('darkMode', newDarkMode ? 'ON': 'OFF')
-    // }
-
     // drawer anchor
     const [anchorDrawer, setAnchorDrawer] = useState(false);
     const closeDrawer = ()=>{
@@ -76,14 +70,25 @@ const MainLayout = ({children, title}) => {
 
     // hex color picker
     const [color, setColor] = useState(colors.main);
+    const [colorDialogOpen, setColorDialogOpen] = useState(false);
 
+    const closeColorDialog = ()=>{
+        setColorDialogOpen(false);
+        closeDrawer();
+    }
+
+    const dispatchTheme = ()=>{
+        Cookies.set('userTheme', color);
+        setColorDialogOpen(false);
+        closeDrawer();
+    }
     // custom theme
     const customTheme = createTheme({
         palette:{
             type: 'dark'
         },
         primary:{
-            main: color
+            main: userTheme
         },
         secondary:{
             main: colors.secondary
@@ -180,7 +185,7 @@ const MainLayout = ({children, title}) => {
                                 <List className={classes.drawerList}>
                                     <ListItem className={classes.drawerItems}>
                                         <MdInvertColors/>
-                                        <Button>
+                                        <Button onClick={()=>setColorDialogOpen(true)}>
                                             <Typography>Appearance</Typography>
                                         </Button>
                                     </ListItem>
@@ -196,6 +201,20 @@ const MainLayout = ({children, title}) => {
 
                     </Toolbar>
                 </AppBar>
+
+                <Dialog
+                open={colorDialogOpen}
+                onClose={closeColorDialog}>
+                    <DialogTitle>
+                        Choose your theme!
+                    </DialogTitle>
+                    <Box display='flex' justifyContent='center' alignItems='center' style={{width:'350px'}}>
+                        <Container style={{padding:'10px'}}>
+                            <HexColorPicker onChange={setColor} color={color}/>
+                        </Container>
+                        <Button onClick={dispatchTheme} variant='contained' style={{width:100, height:40, margin:20}}>Select</Button>
+                    </Box>
+                </Dialog>
 
                 <Box display='flex' className={classes.mainContentBlock}>
                     <Container className={classes.sidebarContainer}>

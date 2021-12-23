@@ -1,10 +1,15 @@
 import { makeStyles } from "@material-ui/core";
+import { useContext } from "react";
 import colors from "./colors";
-const styleObjects = ()=>{
+import { TaskContext } from "./taskManager";
+import Cookies from "js-cookie";
+const StyleObjects = ()=>{
+    const userTheme = Cookies.get('userTheme')
+    ? JSON.parse(JSON.stringify(Cookies.get('userTheme'))) : colors.secondary 
 
     const useLayoutStyles = makeStyles(theme=>({
         appbar:{
-            background: colors.secondary,
+            background: userTheme,
             '& a':{
                 color:colors.textMain,
             }
@@ -31,7 +36,7 @@ const styleObjects = ()=>{
         sidebarContainer:{
             height:'100vh',
             width:'200px',
-            background: colors.secondary,
+            background: userTheme,
             position: 'absolute',
         },
         // main component
@@ -46,7 +51,7 @@ const styleObjects = ()=>{
         // drawer designs
         drawer:{
             '& .MuiPaper-root':{
-                background: colors.secondary,
+                background: userTheme,
             }
         },
         drawerList:{
@@ -316,4 +321,4 @@ const styleObjects = ()=>{
     }
 }
 
-export default styleObjects;
+export default StyleObjects;

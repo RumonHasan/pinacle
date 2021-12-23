@@ -19,6 +19,8 @@ const initialStates = {
     JSON.parse(Cookies.get('userInfo')): {},
 
     userToken: '',
+    userTheme: '',
+
 }
 
 const reducer = (state, action)=>{
@@ -32,6 +34,11 @@ const reducer = (state, action)=>{
             return{
                 ...state,
                 darkMode:true
+            }
+        case 'LOAD_USER_THEME':
+            return{
+                ...state,
+                userTheme: action.payload,
             }
        // add archives
        case 'ADD_TO_ARCHIVE':
