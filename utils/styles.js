@@ -4,8 +4,10 @@ import colors from "./colors";
 import { TaskContext } from "./taskManager";
 import Cookies from "js-cookie";
 const StyleObjects = ()=>{
-    const userTheme = Cookies.get('userTheme')
-    ? JSON.parse(JSON.stringify(Cookies.get('userTheme'))) : colors.secondary 
+    const {state} = useContext(TaskContext);
+    const {userInfo} = state;
+    const userTheme = userInfo.theme ? userInfo.theme : 
+    '#ccc';
 
     const useLayoutStyles = makeStyles(theme=>({
         appbar:{

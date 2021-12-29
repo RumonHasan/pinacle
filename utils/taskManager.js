@@ -35,10 +35,15 @@ const reducer = (state, action)=>{
                 ...state,
                 darkMode:true
             }
-        case 'LOAD_USER_THEME':
+        // case 'LOAD_USER_THEME':
+        //     return{
+        //         ...state,
+        //         userTheme: action.payload,
+        //     }
+        case 'UPDATE_USER_THEME':
             return{
                 ...state,
-                userTheme: action.payload,
+                userTheme: action.payload
             }
        // add archives
        case 'ADD_TO_ARCHIVE':

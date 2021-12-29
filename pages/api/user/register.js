@@ -12,6 +12,9 @@ registerHandler.post(async(req,res)=>{
     const name = req.body.name;
     const email = req.body.email;
     const password = bcrypt.hashSync(req.body.password);
+    const theme = req.body.theme;
+    const background = req.body.background;
+    console.log(req.body);
 
     // checking whether the email already exists or not
     const existEmail = await User.findOne({email: req.body.email});
@@ -23,7 +26,9 @@ registerHandler.post(async(req,res)=>{
     const newUser = new User({
         name: name,
         email: email,
-        password: password
+        password: password,
+        theme: theme,
+        background: background
     });
     const user = await newUser.save();
     await database.disconnect();
@@ -32,7 +37,9 @@ registerHandler.post(async(req,res)=>{
         userToken,
         _id: user._id,
         name:user.name,
-        email:user.email
+        email:user.email,
+        theme: user.theme,
+        background: user.background,
     })
 });
 export default registerHandler;

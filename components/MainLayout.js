@@ -20,7 +20,8 @@ ListItem,
 ListSubheader,
 Popover,
 Dialog,
-DialogTitle
+DialogTitle,
+Input
 } from '@material-ui/core';
 import {CgDarkMode} from 'react-icons/cg';
 import {FaSearch} from 'react-icons/fa';
@@ -39,6 +40,7 @@ import { useRouter } from 'next/dist/client/router';
 import { useSnackbar } from 'notistack';
 import { GoogleLogout } from 'react-google-login';
 import { HexColorPicker } from 'react-colorful';
+import axios from 'axios';
 
 const MainLayout = ({children, title}) => {
     const {state, dispatch} = useContext(TaskContext);
@@ -71,17 +73,47 @@ const MainLayout = ({children, title}) => {
     // hex color picker
     const [color, setColor] = useState(colors.main);
     const [colorDialogOpen, setColorDialogOpen] = useState(false);
+    const [imageUrl, setImageUrl] = useState('');
+
+    const getImageUrl = (imageFile) => new Promise((resolve, reject)=>{
+        if(imageFile){
+            const reader = new FileReader();
+            reader.onload= (e) =>{
+                resolve(e.target.result);
+            }
+            reader.readAsDataURL(imageFile);
+        }
+    })
+    console.log(imageUrl);
+
+    const handleWallpaper = (e)=>{
+        const imageFile = e.target.files[0];
+        if(imageFile && imageFile.type.substr(0,5) === 'image'){
+            getImageUrl(imageFile).then((data)=> setImageUrl(data));
+        }else{
+            setImageUrl('');
+    }
+    }
 
     const closeColorDialog = ()=>{
         setColorDialogOpen(false);
         closeDrawer();
     }
 
-    const dispatchTheme = ()=>{
-        Cookies.set('userTheme', color);
-        setColorDialogOpen(false);
-        closeDrawer();
+    const dispatchTheme = async ()=>{
+        console.log(userInfo._id);
+        try{
+            const {data} = await axios.post(`/api/user/${userInfo._id}/updateThemes`, {colorTheme: color, image: imageUrl});
+            dispatch({type:'UPDATE_USER_THEME', payload: data.theme});
+            console.log(data);
+            Cookies.set('userTheme', color);
+            setColorDialogOpen(false);
+            closeDrawer();
+        }catch(err){
+            enqueueSnackbar(`Unable to update the theme: ${err}`, {variant:'error'})
+        }
     }
+    
     // custom theme
     const customTheme = createTheme({
         palette:{
@@ -214,13 +246,15 @@ const MainLayout = ({children, title}) => {
                         </Container>
                         <Button onClick={dispatchTheme} variant='contained' style={{width:100, height:40, margin:20}}>Select</Button>
                     </Box>
+                    <Input type='file' accept='image/*' onChange={handleWallpaper} id='contained-button-file'/>
                 </Dialog>
 
                 <Box display='flex' className={classes.mainContentBlock}>
                     <Container className={classes.sidebarContainer}>
                         <Sidebar/>
                     </Container>
-                    <Container className={classes.mainComponent}>
+                    <Container className={classes.mainComponent} style={{backgroundImage: imageUrl ? `url${imageUrl}`: undefined,
+                    backgroundSize:'cover'}}>
                         {children}
                     </Container>
                 </Box>

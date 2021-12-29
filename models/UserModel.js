@@ -4,7 +4,8 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true},
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true },
-    theme: {type:String, required:true},
+    theme: {type:String},
+    background: {type:String}
 },
 {
     timestamps: true,

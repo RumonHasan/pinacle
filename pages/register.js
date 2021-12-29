@@ -28,7 +28,7 @@ const Register = () => {
             return;
         }
         try{
-            const {data} = await axios.post('/api/user/register', {name, email, password});
+            const {data} = await axios.post('/api/user/register', {name, email, password, theme:null, background:null});
             dispatch({type: 'ADD_USER_INFO_CUSTOM', payload:data});
             Cookies.set('userInfo', data);
             enqueueSnackbar('registration successful', {variant:'success'})
